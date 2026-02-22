@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Setup Household</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "primary-content": "#ffffff",
+                        "primary-dark": "#0b5cb5",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e2936",
+                        "border-light": "#e2e8f0",
+                        "border-dark": "#2d3748",
+                        "text-main": "#0f172a",
+                        "text-main-dark": "#f8fafc",
+                        "text-sub": "#64748b",
+                        "text-sub-dark": "#94a3b8",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        /* Custom scrollbar for better mobile feel if needed */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-text-main-dark min-h-screen flex flex-col items-center justify-start transition-colors duration-200">
+<div class="w-full max-w-md bg-background-light dark:bg-background-dark min-h-screen flex flex-col relative shadow-2xl">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-50 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-sm border-b border-border-light dark:border-border-dark px-4 h-14 flex items-center justify-between transition-colors">
+<button class="text-text-main dark:text-text-main-dark flex items-center justify-center p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-2xl">close</span>
+</button>
+<h1 class="text-lg font-bold tracking-tight">Setup Household</h1>
+<button class="text-primary font-semibold text-base px-2 py-1 rounded hover:bg-primary/10 transition-colors disabled:opacity-50" disabled="">
+                Save
+            </button>
+</header>
+<!-- Main Content Scroll Area -->
+<main class="flex-1 overflow-y-auto no-scrollbar pb-24">
+<!-- Section 1: Head of Household -->
+<section class="pt-6 px-4">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary text-xl">person_pin</span>
+<h2 class="text-base font-bold uppercase tracking-wider text-text-sub dark:text-text-sub-dark text-xs">Head of Household</h2>
+</div>
+<!-- Input / Dropdown Trigger -->
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-sub dark:text-text-sub-dark">search</span>
+</div>
+<input class="block w-full pl-10 pr-10 py-3.5 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl text-sm placeholder:text-text-sub/70 dark:placeholder:text-text-sub-dark/70 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all shadow-sm" placeholder="Search resident by name or ID..." readonly="" type="text"/>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-sub dark:text-text-sub-dark">expand_more</span>
+</div>
+</div>
+<!-- Selected State (Simulated as populated for demo purposes, hidden by default but shown here for design) -->
+<div class="mt-4 hidden"> <!-- Toggle 'hidden' to test empty state -->
+<div class="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl p-4 flex items-center gap-4 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 p-1 rounded-full"><span class="material-symbols-outlined text-sm">close</span></button>
+</div>
+<div class="h-12 w-12 rounded-full bg-primary/20 text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<p class="font-bold text-text-main dark:text-text-main-dark">Robert Fox</p>
+<p class="text-xs text-text-sub dark:text-text-sub-dark">ID: #839201 • Age: 45</p>
+</div>
+<div class="ml-auto">
+<span class="inline-flex items-center px-2 py-1 rounded-md bg-primary/10 text-primary text-xs font-medium">Head</span>
+</div>
+</div>
+</div>
+<!-- Empty State Visualization -->
+<div class="mt-4 p-6 border-2 border-dashed border-border-light dark:border-border-dark rounded-xl flex flex-col items-center justify-center gap-2 text-center bg-slate-50 dark:bg-slate-800/50">
+<div class="h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center mb-1">
+<span class="material-symbols-outlined text-text-sub dark:text-text-sub-dark">person_off</span>
+</div>
+<p class="text-sm font-medium text-text-main dark:text-text-main-dark">No Head Selected</p>
+<p class="text-xs text-text-sub dark:text-text-sub-dark max-w-[200px]">Select a resident above to assign them as the head of this household.</p>
+</div>
+</section>
+<!-- Section Divider -->
+<div class="h-px bg-border-light dark:bg-border-dark mx-4 my-6"></div>
+<!-- Section 2: Family Members -->
+<section class="px-4">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">diversity_3</span>
+<h2 class="text-base font-bold uppercase tracking-wider text-text-sub dark:text-text-sub-dark text-xs">Family Members</h2>
+</div>
+<button class="text-primary text-sm font-semibold flex items-center gap-1 hover:text-primary-dark transition-colors">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+                        Add Member
+                    </button>
+</div>
+<!-- Members List -->
+<div class="space-y-3">
+<!-- Member Item 1 -->
+<div class="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl p-3 flex items-center gap-3 shadow-sm">
+<div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 font-bold text-sm">
+                            JD
+                        </div>
+<div class="flex-1 min-w-0">
+<p class="font-semibold text-sm text-text-main dark:text-text-main-dark truncate">Jane Doe</p>
+<p class="text-xs text-text-sub dark:text-text-sub-dark">ID: #839202 • Wife</p>
+</div>
+<button class="text-text-sub dark:text-text-sub-dark hover:text-red-500 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-xl">remove_circle_outline</span>
+</button>
+</div>
+<!-- Member Item 2 -->
+<div class="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl p-3 flex items-center gap-3 shadow-sm">
+<div class="h-10 w-10 rounded-full bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0 font-bold text-sm">
+                            TD
+                        </div>
+<div class="flex-1 min-w-0">
+<p class="font-semibold text-sm text-text-main dark:text-text-main-dark truncate">Timmy Doe</p>
+<p class="text-xs text-text-sub dark:text-text-sub-dark">ID: #839205 • Son</p>
+</div>
+<button class="text-text-sub dark:text-text-sub-dark hover:text-red-500 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-xl">remove_circle_outline</span>
+</button>
+</div>
+<!-- Member Item 3 -->
+<div class="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl p-3 flex items-center gap-3 shadow-sm opacity-50">
+<div class="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center shrink-0 font-bold text-sm border border-dashed border-slate-300 dark:border-slate-600">
+                           +
+                        </div>
+<div class="flex-1 min-w-0">
+<p class="font-medium text-sm text-text-sub dark:text-text-sub-dark italic">Add another member...</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section Divider -->
+<div class="h-px bg-border-light dark:bg-border-dark mx-4 my-6"></div>
+<!-- Section 3: Summary -->
+<section class="px-4 pb-8">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary text-xl">receipt_long</span>
+<h2 class="text-base font-bold uppercase tracking-wider text-text-sub dark:text-text-sub-dark text-xs">Household Summary</h2>
+</div>
+<div class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800/50 dark:to-slate-800/20 border border-border-light dark:border-border-dark rounded-xl p-4 flex flex-col gap-3">
+<div class="flex justify-between items-center pb-2 border-b border-dashed border-slate-200 dark:border-slate-700">
+<span class="text-sm font-medium text-text-sub dark:text-text-sub-dark">Total Residents</span>
+<span class="text-lg font-bold text-text-main dark:text-text-main-dark">3</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="text-text-sub dark:text-text-sub-dark">Head</span>
+</div>
+<span class="font-medium">1</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-indigo-500"></div>
+<span class="text-text-sub dark:text-text-sub-dark">Members</span>
+</div>
+<span class="font-medium">2</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Action Bar -->
+<div class="absolute bottom-0 left-0 right-0 p-4 bg-surface-light dark:bg-surface-dark border-t border-border-light dark:border-border-dark z-40 backdrop-blur-xl bg-opacity-90">
+<button class="w-full h-12 bg-primary hover:bg-primary-dark text-white font-bold rounded-xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined">check</span>
+                Create Household
+            </button>
+</div>
+<!-- Background Decor elements (Subtle) -->
+<div class="fixed top-20 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+<div class="fixed bottom-20 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+</div>
+<!-- Dropdown Modal Simulation (Hidden by default, structure provided) -->
+<!-- This would be an overlay in a real app -->
+<div class="hidden absolute inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 sm:p-0" id="search-modal">
+<!-- Content would go here -->
+</div>
+</body></html>
