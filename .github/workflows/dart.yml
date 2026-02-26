@@ -14,9 +14,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions: write-all
 
     steps:
       - uses: actions/checkout@v4
+      - name: Create Tag
+        run: | 
+          VERSION="v1.0.${{ github.run_number }}" 
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag $VERSION
+          git push origin $VERSION
 
       # Note: This workflow uses the latest stable version of the Dart SDK.
       # You can specify other versions if desired, see documentation here:
@@ -29,7 +37,8 @@ jobs:
         
       # Create env
       - name: Create .env from example
-        run: cp .env.example .env
+        run: |
+          echo "GRAPHQL_ENDPOINT=${{ secrets.GRAPHQL_ENDPOINT }}" >> .env
 
 
       # Uncomment this step to verify the use of 'dart format' on each commit.
@@ -45,3 +54,12 @@ jobs:
       # want to change this to 'flutter test'.
       - name: Run tests
         run: flutter test
+        
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: build/app/outputs/flutter-apk/app-release.apk
