@@ -1,7 +1,6 @@
 enum Gender {
   nam,
-  nu,
-  khac;
+  nu;
 
   String toVnString() {
     switch (this) {
@@ -9,8 +8,6 @@ enum Gender {
         return 'Nam';
       case Gender.nu:
         return 'Nữ';
-      case Gender.khac:
-        return 'Khác';
     }
   }
 
@@ -24,7 +21,7 @@ enum Gender {
       case 'nữ':
         return Gender.nu;
       default:
-        return Gender.khac;
+        return Gender.nam;
     }
   }
 }

@@ -38,11 +38,39 @@ const String deleteResidentMutation = r'''
 ''';
 
 const String createHouseholdMutation = r'''
-  mutation CreateHousehold($input: HouseholdCreateInput!) {
+  mutation houseHoldCreate($input: HouseholdCreateInput!) {
     householdCreate(input: $input) {
       id
       code
       address
+      head {
+        id
+        fullName
+        gender
+        dateOfBirth
+        phone
+        nationalId
+        address
+        occupation
+        ethnicity
+        religion
+        educationLevel
+        note
+      }
+      members {
+        id
+        fullName
+        gender
+        dateOfBirth
+        phone
+        nationalId
+        address
+        occupation
+        ethnicity
+        religion
+        educationLevel
+        note
+      }
     }
   }
 ''';
