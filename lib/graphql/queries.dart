@@ -10,10 +10,16 @@ const String meQuery = r'''
 
 const String getResidentsQuery = r'''
   query GetResidents(
+    $search: String
+    $where: QueryResidentsWhereWhereConditions
+    $orderBy: [QueryResidentsOrderByOrderByClause!]
     $first: Int
     $page: Int
   ) {
     residents(
+      search: $search
+      where: $where
+      orderBy: $orderBy
       first: $first
       page: $page
     ) {
@@ -79,8 +85,8 @@ const String getResidentDetailQuery = r'''
 ''';
 
 const String getHouseholdsQuery = r'''
-  query GetHouseholds($first: Int, $page: Int) {
-    houseHolds(first: $first, page: $page) {
+  query GetHouseholds($search: String, $first: Int, $page: Int) {
+    houseHolds(search: $search, first: $first, page: $page) {
       paginatorInfo {
         total
         currentPage

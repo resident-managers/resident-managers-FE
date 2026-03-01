@@ -18,12 +18,12 @@ class _ResidentDirectoryScreenState
   final TextEditingController _searchController = TextEditingController();
   String _selectedFilter = 'All';
   String _keyword = '';
+  String _sortOrder = 'ASC';
 
   @override
   Widget build(BuildContext context) {
-    final residentsAsync = ref.watch(
-      residentsProvider(_keyword.isEmpty ? null : _keyword),
-    );
+    final params = _queryParams();
+    final residentsAsync = ref.watch(residentsProvider(params));
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7F8),
@@ -44,7 +44,15 @@ class _ResidentDirectoryScreenState
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 70.0),
         child: FloatingActionButton(
-          onPressed: () => context.push('/add-resident'),
+          onPressed: () async {
+            final created = await context.push<bool>('/add-resident');
+            if (!mounted) {
+              return;
+            }
+            if (created == true) {
+              ref.invalidate(residentsProvider(_queryParams()));
+            }
+          },
           backgroundColor: const Color(0xFF137fec),
           shape: const CircleBorder(),
           child: const Icon(Icons.add, color: Colors.white, size: 28),
@@ -76,7 +84,7 @@ class _ResidentDirectoryScreenState
             const SizedBox(height: 16),
             OutlinedButton(
               onPressed: () => ref.invalidate(
-                residentsProvider(_keyword.isEmpty ? null : _keyword),
+                residentsProvider(_queryParams()),
               ),
               child: const Text('Retry'),
             ),
@@ -124,8 +132,20 @@ class _ResidentDirectoryScreenState
               hintText: 'Search by name or ID...',
               prefixIcon: const Icon(Icons.search, color: Color(0xFF94A3B8)),
               suffixIcon: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.tune, color: Color(0xFF94A3B8)),
+                onPressed: () {
+                  setState(() {
+                    _sortOrder = _sortOrder == 'ASC' ? 'DESC' : 'ASC';
+                  });
+                },
+                icon: Icon(
+                  _sortOrder == 'ASC'
+                      ? Icons.arrow_downward
+                      : Icons.arrow_upward,
+                  color: const Color(0xFF94A3B8),
+                ),
+                tooltip: _sortOrder == 'ASC'
+                    ? 'Sắp xếp: A-Z'
+                    : 'Sắp xếp: Z-A',
               ),
               filled: true,
               fillColor: const Color(0xFFF6F7F8),
@@ -144,7 +164,6 @@ class _ResidentDirectoryScreenState
                 _buildFilterButton('All'),
                 _buildFilterButton('Male'),
                 _buildFilterButton('Female'),
-                _buildFilterButton('Pending'),
               ],
             ),
           ),
@@ -187,6 +206,20 @@ class _ResidentDirectoryScreenState
           ),
         ),
       ),
+    );
+  }
+
+  ResidentsQueryParams _queryParams() {
+    final gender = switch (_selectedFilter) {
+      'Male' => 'male',
+      'Female' => 'female',
+      _ => null,
+    };
+
+    return ResidentsQueryParams(
+      search: _keyword.isEmpty ? null : _keyword,
+      gender: gender,
+      sortOrder: _sortOrder,
     );
   }
 
