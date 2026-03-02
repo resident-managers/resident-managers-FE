@@ -19,7 +19,7 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
   DateTime? _selectedDate;
-  String _selectedGender = 'Male';
+  String _selectedGender = 'Nam';
   bool _isSaving = false;
 
   @override
@@ -32,7 +32,7 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
           icon: const Icon(Icons.arrow_back_ios_new, size: 20),
         ),
         title: const Text(
-          'Add New Resident',
+          'Thêm cư dân mới',
           style: TextStyle(fontWeight: .bold, fontSize: 18),
         ),
         centerTitle: true,
@@ -53,43 +53,43 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
                 child: Column(
                   crossAxisAlignment: .start,
                   children: [
-                    _buildSectionHeader('Identity'),
-                    _buildFieldLabel('Full Name'),
+                    _buildSectionHeader('Danh tính'),
+                    _buildFieldLabel('Họ và tên'),
                     _buildTextField(
                       controller: _nameController,
-                      hint: 'ex. John Doe',
+                      hint: 'Nhập họ và tên',
                     ),
                     const SizedBox(height: 16),
-                    _buildFieldLabel('ID Number'),
+                    _buildFieldLabel('Căn cước công dân'),
                     _buildTextField(
                       controller: _idController,
-                      hint: 'Enter national ID',
+                      hint: 'Nhập số CCCD',
                       prefixIcon: Icons.badge_outlined,
                     ),
                     const SizedBox(height: 16),
-                    _buildFieldLabel('Date of Birth'),
+                    _buildFieldLabel('Ngày sinh'),
                     _buildDatePicker(),
                     const SizedBox(height: 24),
                     const Divider(),
                     const SizedBox(height: 24),
-                    _buildSectionHeader('Demographics'),
-                    _buildFieldLabel('Gender'),
+                    _buildSectionHeader('Nhân khẩu học'),
+                    _buildFieldLabel('Giới tính'),
                     _buildGenderSelection(),
                     const SizedBox(height: 24),
                     const Divider(),
                     const SizedBox(height: 24),
-                    _buildSectionHeader('Contact Info'),
-                    _buildFieldLabel('Phone Number'),
+                    _buildSectionHeader('Thông tin liên hệ'),
+                    _buildFieldLabel('Số điện thoại'),
                     _buildTextField(
                       controller: _phoneController,
                       hint: '(123) 456-7890',
                       keyboardType: TextInputType.phone,
                     ),
                     const SizedBox(height: 16),
-                    _buildFieldLabel('Address'),
+                    _buildFieldLabel('Địa chỉ thường trú'),
                     _buildTextField(
                       controller: _addressController,
-                      hint: 'Enter full residential address...',
+                      hint: 'Nhập địa chỉ thường trú...',
                       maxLines: 4,
                     ),
                     const SizedBox(height: 100), // Space for sticky button
@@ -195,7 +195,7 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
           children: [
             Text(
               _selectedDate == null
-                  ? 'Select Date'
+                  ? 'Chọn ngày sinh'
                   : DateFormat('yyyy-MM-dd').format(_selectedDate!),
               style: TextStyle(
                 color: _selectedDate == null
@@ -223,9 +223,8 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
       ),
       child: Row(
         children: [
-          _buildGenderOption('Male'),
-          _buildGenderOption('Female'),
-          _buildGenderOption('Other'),
+          _buildGenderOption('Nam'),
+          _buildGenderOption('Nữ'),
         ],
       ),
     );
@@ -301,7 +300,7 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
                   Icon(Icons.save),
                   SizedBox(width: 8),
                   Text(
-                    'Save Resident',
+                    'Lưu thông tin',
                     style: TextStyle(fontSize: 16, fontWeight: .bold),
                   ),
                 ],
@@ -312,9 +311,9 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
 
   Future<void> _saveResident() async {
     if (_nameController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Full name is required')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Họ và tên không được để trống')),
+      );
       return;
     }
 
@@ -322,8 +321,8 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
     final client = GraphQLConfig.client.value;
 
     final gender = switch (_selectedGender) {
-      'Male' => 'MALE',
-      'Female' => 'FEMALE',
+      'Nam' => 'MALE',
+      'Nữ' => 'FEMALE',
       _ => 'MALE',
     };
 
@@ -364,9 +363,9 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Resident created successfully')),
-    );
-    context.pop();
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Thêm thông tin thành công')));
+    context.pop(true);
   }
 }
