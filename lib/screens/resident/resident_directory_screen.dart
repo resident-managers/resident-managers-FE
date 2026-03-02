@@ -16,7 +16,7 @@ class ResidentDirectoryScreen extends ConsumerStatefulWidget {
 class _ResidentDirectoryScreenState
     extends ConsumerState<ResidentDirectoryScreen> {
   final TextEditingController _searchController = TextEditingController();
-  String _selectedFilter = 'All';
+  String _selectedFilter = 'Tất cả';
   String _keyword = '';
   String _sortOrder = 'ASC';
 
@@ -72,7 +72,7 @@ class _ResidentDirectoryScreenState
             const Icon(Icons.error_outline, size: 40, color: Colors.redAccent),
             const SizedBox(height: 12),
             const Text(
-              'Cannot load residents from backend',
+              'Không tải được danh sách cư dân từ máy chủ',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
@@ -86,7 +86,7 @@ class _ResidentDirectoryScreenState
               onPressed: () => ref.invalidate(
                 residentsProvider(_queryParams()),
               ),
-              child: const Text('Retry'),
+              child: const Text('Thử lại'),
             ),
           ],
         ),
@@ -105,7 +105,7 @@ class _ResidentDirectoryScreenState
             mainAxisAlignment: .spaceBetween,
             children: [
               const Text(
-                'Resident Directory',
+                'Danh sách cư dân',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: .bold,
@@ -129,7 +129,7 @@ class _ResidentDirectoryScreenState
             controller: _searchController,
             onChanged: (value) => setState(() => _keyword = value),
             decoration: InputDecoration(
-              hintText: 'Search by name or ID...',
+              hintText: 'Tìm theo tên hoặc mã...',
               prefixIcon: const Icon(Icons.search, color: Color(0xFF94A3B8)),
               suffixIcon: IconButton(
                 onPressed: () {
@@ -161,9 +161,9 @@ class _ResidentDirectoryScreenState
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _buildFilterButton('All'),
-                _buildFilterButton('Male'),
-                _buildFilterButton('Female'),
+                _buildFilterButton('Tất cả'),
+                _buildFilterButton('Nam'),
+                _buildFilterButton('Nữ'),
               ],
             ),
           ),
@@ -211,8 +211,8 @@ class _ResidentDirectoryScreenState
 
   ResidentsQueryParams _queryParams() {
     final gender = switch (_selectedFilter) {
-      'Male' => 'male',
-      'Female' => 'female',
+      'Nam' => 'male',
+      'Nữ' => 'female',
       _ => null,
     };
 
@@ -249,16 +249,16 @@ class _ResidentDirectoryScreenState
       child: Row(
         mainAxisAlignment: .spaceAround,
         children: [
-          _buildNavItem(Icons.group, 'Directory', true),
+          _buildNavItem(Icons.group, 'Cư dân', true),
           _buildNavItem(
             Icons.house,
-            'Households',
+            'Hộ dân',
             false,
-            onTap: () => context.push('/households'),
+            onTap: () => context.go('/households'),
           ),
           _buildNavItem(
             Icons.account_circle,
-            'Profile',
+            'Tài khoản',
             false,
             onTap: _onProfileTap,
           ),
@@ -279,8 +279,8 @@ class _ResidentDirectoryScreenState
               children: [
                 const ListTile(
                   leading: Icon(Icons.account_circle_outlined),
-                  title: Text('Profile'),
-                  subtitle: Text('Account actions'),
+                  title: Text('Tài khoản'),
+                  subtitle: Text('Thao tác tài khoản'),
                 ),
                 const SizedBox(height: 8),
                 SizedBox(
@@ -288,7 +288,7 @@ class _ResidentDirectoryScreenState
                   child: ElevatedButton.icon(
                     onPressed: () => Navigator.of(sheetContext).pop(true),
                     icon: const Icon(Icons.logout),
-                    label: const Text('Logout'),
+                    label: const Text('Đăng xuất'),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -296,7 +296,7 @@ class _ResidentDirectoryScreenState
                   width: double.infinity,
                   child: TextButton(
                     onPressed: () => Navigator.of(sheetContext).pop(false),
-                    child: const Text('Cancel'),
+                    child: const Text('Hủy'),
                   ),
                 ),
               ],
@@ -428,7 +428,7 @@ class ResidentCard extends StatelessWidget {
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            'ID: $id • $gender',
+                            'Mã: $id • $gender',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(

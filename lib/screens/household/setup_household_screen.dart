@@ -20,7 +20,8 @@ class SetupHouseholdScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SetupHouseholdScreen> createState() => _SetupHouseholdScreenState();
+  ConsumerState<SetupHouseholdScreen> createState() =>
+      _SetupHouseholdScreenState();
 }
 
 class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
@@ -61,8 +62,10 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final pageTitle = widget.isEditMode ? 'Edit Household' : 'Setup Household';
-    final actionText = widget.isEditMode ? 'Update Household' : 'Create Household';
+    final pageTitle = widget.isEditMode ? 'Sửa hộ dân' : 'Tạo hộ dân';
+    final actionText = widget.isEditMode
+        ? 'Cập nhật hộ dân'
+        : 'Tạo hộ dân';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7F8),
@@ -87,21 +90,6 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: Center(
-              child: Text(
-                'Save',
-                style: TextStyle(
-                  color: widget.isEditMode ? const Color(0xFF137FEC) : const Color(0xFF93C5FD),
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 110),
@@ -128,16 +116,22 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _SectionHeader(icon: Icons.person_pin, title: 'HEAD OF HOUSEHOLD'),
+          const _SectionHeader(
+            icon: Icons.person_pin,
+            title: 'CHỦ HỘ',
+          ),
           const SizedBox(height: 10),
           _buildResidentPickerField(
             hint: _selectedHead == null
-                ? 'Search resident by name or ID...'
+                ? 'Tìm cư dân theo tên hoặc mã...'
                 : _selectedHead!.fullName,
             onTap: widget.isEditMode ? null : _pickHead,
           ),
           const SizedBox(height: 10),
-          const _SectionHeader(icon: Icons.location_on, title: 'HOUSEHOLD ADDRESS'),
+          const _SectionHeader(
+            icon: Icons.location_on,
+            title: 'ĐỊA CHỈ HỘ DÂN',
+          ),
           const SizedBox(height: 10),
           TextField(
             controller: _addressController,
@@ -150,7 +144,10 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
               ),
               filled: true,
               fillColor: Colors.white,
-              contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 12,
+                horizontal: 12,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(color: Color(0xFFDCE2EA)),
@@ -168,7 +165,10 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
     );
   }
 
-  Widget _buildResidentPickerField({required String hint, VoidCallback? onTap}) {
+  Widget _buildResidentPickerField({
+    required String hint,
+    VoidCallback? onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -189,7 +189,9 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: _selectedHead == null ? const Color(0xFF9CA3AF) : const Color(0xFF111827),
+                  color: _selectedHead == null
+                      ? const Color(0xFF9CA3AF)
+                      : const Color(0xFF111827),
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
@@ -257,7 +259,7 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
               borderRadius: BorderRadius.circular(6),
             ),
             child: const Text(
-              'Head',
+              'Chủ hộ',
               style: TextStyle(
                 color: Color(0xFF137FEC),
                 fontSize: 12,
@@ -272,7 +274,9 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
             icon: Icon(
               widget.isEditMode ? Icons.lock : Icons.close,
               size: 16,
-              color: widget.isEditMode ? const Color(0xFF9CA3AF) : const Color(0xFFEF4444),
+              color: widget.isEditMode
+                  ? const Color(0xFF9CA3AF)
+                  : const Color(0xFFEF4444),
             ),
           ),
         ],
@@ -298,7 +302,7 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
           ),
           SizedBox(height: 10),
           Text(
-            'No Head Selected',
+            'Chưa chọn chủ hộ',
             style: TextStyle(
               color: Color(0xFF1F2937),
               fontWeight: FontWeight.w700,
@@ -307,7 +311,7 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
           ),
           SizedBox(height: 6),
           Text(
-            'Select a resident above to assign\nthem as the head of this\nhousehold.',
+            'Chọn một cư dân ở trên để gán\nlàm chủ hộ cho hộ dân này.',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xFF7C8A9F),
@@ -329,14 +333,19 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
           Row(
             children: [
               const Expanded(
-                child: _SectionHeader(icon: Icons.diversity_3, title: 'FAMILY MEMBERS'),
+                child: _SectionHeader(
+                  icon: Icons.diversity_3,
+                  title: 'THÀNH VIÊN HỘ',
+                ),
               ),
               TextButton.icon(
                 onPressed: _pickMember,
-                style: TextButton.styleFrom(foregroundColor: const Color(0xFF137FEC)),
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color(0xFF137FEC),
+                ),
                 icon: const Icon(Icons.add_circle, size: 16),
                 label: const Text(
-                  'Add Member',
+                  'Thêm thành viên',
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
                 ),
               ),
@@ -413,7 +422,9 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
                   },
             icon: Icon(
               isHeadMember ? Icons.lock : Icons.remove_circle,
-              color: isHeadMember ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
+              color: isHeadMember
+                  ? const Color(0xFF9CA3AF)
+                  : const Color(0xFF6B7280),
               size: 18,
             ),
           ),
@@ -442,7 +453,7 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
             ),
             SizedBox(width: 10),
             Text(
-              'Add another member...',
+              'Thêm thành viên khác...',
               style: TextStyle(
                 color: Color(0xFFA1A9B8),
                 fontSize: 14,
@@ -465,7 +476,10 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
       padding: const EdgeInsets.fromLTRB(12, 2, 12, 10),
       child: Column(
         children: [
-          const _SectionHeader(icon: Icons.receipt_long, title: 'HOUSEHOLD SUMMARY'),
+          const _SectionHeader(
+            icon: Icons.receipt_long,
+            title: 'TÓM TẮT HỘ DÂN',
+          ),
           const SizedBox(height: 8),
           Container(
             width: double.infinity,
@@ -481,7 +495,7 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
                   children: [
                     const Expanded(
                       child: Text(
-                        'Total Residents',
+                        'Tổng nhân khẩu',
                         style: TextStyle(
                           color: Color(0xFF64748B),
                           fontSize: 14,
@@ -500,9 +514,9 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
                   ],
                 ),
                 const Divider(height: 18, color: Color(0xFFD9E1EA)),
-                _summaryDotRow('Head', headCount, const Color(0xFF137FEC)),
+                _summaryDotRow('Chủ hộ', headCount, const Color(0xFF137FEC)),
                 const SizedBox(height: 8),
-                _summaryDotRow('Members', memberCount, const Color(0xFF6366F1)),
+                _summaryDotRow('Thành viên', memberCount, const Color(0xFF6366F1)),
               ],
             ),
           ),
@@ -562,13 +576,18 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF137FEC),
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
             icon: _isSaving
                 ? const SizedBox(
                     width: 16,
                     height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
                   )
                 : const Icon(Icons.check, size: 18),
             label: Text(
@@ -583,14 +602,14 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
 
   Future<void> _pickHead() async {
     if (widget.isEditMode) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Không thể thay đổi chủ hộ khi cập nhật')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Không thể thay đổi chủ hộ khi cập nhật')),
+      );
       return;
     }
     final excluded = _members.map((m) => m.resident.id).toSet();
     final selected = await _showResidentPicker(
-      title: 'Select Head of Household',
+      title: 'Chọn chủ hộ',
       excludedResidentIds: excluded,
       excludeResidentsInAnyHousehold: true,
       allowedResidentIds: _editableResidentIds,
@@ -656,8 +675,14 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
               builder: (context, ref, _) {
                 final media = MediaQuery.of(context);
                 final availableHeight =
-                    media.size.height - media.viewInsets.bottom - media.padding.top - 24;
-                final sheetHeight = availableHeight.clamp(280.0, media.size.height * 0.9);
+                    media.size.height -
+                    media.viewInsets.bottom -
+                    media.padding.top -
+                    24;
+                final sheetHeight = availableHeight.clamp(
+                  280.0,
+                  media.size.height * 0.9,
+                );
                 final householdsAsync = ref.watch(
                   householdsProvider(const HouseholdsQueryParams()),
                 );
@@ -712,36 +737,47 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
                                 });
                               },
                               decoration: InputDecoration(
-                                hintText: 'Search resident by name or ID...',
-                                prefixIcon: const Icon(Icons.search, color: Color(0xFF94A3B8)),
+                                hintText: 'Tìm cư dân theo tên hoặc mã...',
+                                prefixIcon: const Icon(
+                                  Icons.search,
+                                  color: Color(0xFF94A3B8),
+                                ),
                                 filled: true,
                                 fillColor: const Color(0xFFF8FAFC),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(color: Color(0xFFDCE2EA)),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xFFDCE2EA),
+                                  ),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(color: Color(0xFFDCE2EA)),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xFFDCE2EA),
+                                  ),
                                 ),
                               ),
                             ),
                             const SizedBox(height: 10),
                             Expanded(
                               child: householdsAsync.when(
-                                loading: () => const Center(child: CircularProgressIndicator()),
+                                loading: () => const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                                 error: (err, _) => Center(
                                   child: Text(
-                                    'Cannot load households\n$err',
+                                    'Không tải được danh sách hộ dân\n$err',
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(fontSize: 12),
                                   ),
                                 ),
                                 data: (households) => residentsAsync.when(
-                                  loading: () => const Center(child: CircularProgressIndicator()),
+                                  loading: () => const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
                                   error: (err, _) => Center(
                                     child: Text(
-                                      'Cannot load residents\n$err',
+                                      'Không tải được danh sách cư dân\n$err',
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(fontSize: 12),
                                     ),
@@ -750,12 +786,16 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
                                     final occupiedResidentIds = <String>{};
                                     if (excludeResidentsInAnyHousehold) {
                                       for (final household in households) {
-                                        final headId = household.head?.id.trim();
-                                        if (headId != null && headId.isNotEmpty) {
+                                        final headId = household.head?.id
+                                            .trim();
+                                        if (headId != null &&
+                                            headId.isNotEmpty) {
                                           occupiedResidentIds.add(headId);
                                         }
-                                        for (final member in household.members ?? const []) {
-                                          final memberId = member.resident.id.trim();
+                                        for (final member
+                                            in household.members ?? const []) {
+                                          final memberId = member.resident.id
+                                              .trim();
                                           if (memberId.isNotEmpty) {
                                             occupiedResidentIds.add(memberId);
                                           }
@@ -764,17 +804,23 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
                                     }
 
                                     final options = residents
-                                        .where((r) => !excludedResidentIds.contains(r.id))
+                                        .where(
+                                          (r) => !excludedResidentIds.contains(
+                                            r.id,
+                                          ),
+                                        )
                                         .where(
                                           (r) =>
-                                              !occupiedResidentIds.contains(r.id) ||
+                                              !occupiedResidentIds.contains(
+                                                r.id,
+                                              ) ||
                                               allowedResidentIds.contains(r.id),
                                         )
                                         .toList();
                                     if (options.isEmpty) {
                                       return const Center(
                                         child: Text(
-                                          'No resident available',
+                                          'Không có cư dân phù hợp',
                                           style: TextStyle(
                                             color: Color(0xFF64748B),
                                             fontWeight: FontWeight.w600,
@@ -784,16 +830,26 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
                                     }
                                     return ListView.separated(
                                       itemCount: options.length,
-                                      separatorBuilder: (_, _) => const Divider(height: 1),
+                                      separatorBuilder: (_, _) =>
+                                          const Divider(height: 1),
                                       itemBuilder: (context, index) {
                                         final resident = options[index];
                                         return ListTile(
-                                          onTap: () => Navigator.of(sheetContext).pop(resident),
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                                          onTap: () => Navigator.of(
+                                            sheetContext,
+                                          ).pop(resident),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 4,
+                                              ),
                                           leading: CircleAvatar(
-                                            backgroundColor: const Color(0xFFDCEBFD),
+                                            backgroundColor: const Color(
+                                              0xFFDCEBFD,
+                                            ),
                                             child: Text(
-                                              _avatarInitials(resident.fullName),
+                                              _avatarInitials(
+                                                resident.fullName,
+                                              ),
                                               style: const TextStyle(
                                                 color: Color(0xFF137FEC),
                                                 fontWeight: FontWeight.w700,
@@ -847,8 +903,14 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
       builder: (context) {
         final media = MediaQuery.of(context);
         final availableHeight =
-            media.size.height - media.viewInsets.bottom - media.padding.top - 24;
-        final sheetHeight = availableHeight.clamp(260.0, media.size.height * 0.75);
+            media.size.height -
+            media.viewInsets.bottom -
+            media.padding.top -
+            24;
+        final sheetHeight = availableHeight.clamp(
+          260.0,
+          media.size.height * 0.75,
+        );
 
         return SafeArea(
           top: false,
@@ -876,7 +938,7 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Select Relationship',
+                        'Chọn quan hệ',
                         style: TextStyle(
                           color: Color(0xFF111827),
                           fontWeight: FontWeight.w700,
@@ -918,28 +980,34 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
 
     final address = _addressController.text.trim();
     if (address.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Vui lòng nhập địa chỉ hộ dân')));
-      return;
-    }
-    if (_members.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng thêm ít nhất 1 thành viên')),
+        const SnackBar(content: Text('Vui lòng nhập địa chỉ hộ dân')),
       );
       return;
     }
-    final hasHeadRoleInMembers = _members.any((m) => _isHeadRelationship(m.relationship));
+    final hasHeadRoleInMembers = _members.any(
+      (m) => _isHeadRelationship(m.relationship),
+    );
     if (hasHeadRoleInMembers) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Thành viên có vai trò chủ hộ không được phép cập nhật/xóa')),
+        const SnackBar(
+          content: Text(
+            'Thành viên có vai trò chủ hộ không được phép cập nhật/xóa',
+          ),
+        ),
       );
       return;
     }
-    final hasInvalidRelationship = _members.any((m) => !_isValidMemberRelationship(m.relationship));
+    final hasInvalidRelationship = _members.any(
+      (m) => !_isValidMemberRelationship(m.relationship),
+    );
     if (hasInvalidRelationship) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Chỉ được cập nhật thành viên có quan hệ hợp lệ với chủ hộ')),
+        const SnackBar(
+          content: Text(
+            'Chỉ được cập nhật thành viên có quan hệ hợp lệ với chủ hộ',
+          ),
+        ),
       );
       return;
     }
@@ -956,38 +1024,35 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
     });
 
     final client = GraphQLConfig.client.value;
+    final membersPayload = _members.isEmpty
+        ? null
+        : _members
+              .map(
+                (m) => {
+                  'residentId': m.resident.id,
+                  'relationship': m.relationship,
+                },
+              )
+              .toList();
+
     final payload = widget.isEditMode
         ? {
             'id': widget.householdId ?? '',
             'address': address,
-            'members': _members
-                .map(
-                  (m) => {
-                    'residentId': m.resident.id,
-                    'relationship': m.relationship,
-                  },
-                )
-                .toList(),
+            'members': membersPayload,
           }
         : {
             'residentId': _selectedHead!.id,
             'address': address,
-            'members': _members
-                .map(
-                  (m) => {
-                    'residentId': m.resident.id,
-                    'relationship': m.relationship,
-                  },
-                )
-                .toList(),
+            'members': membersPayload,
           };
 
     final result = await client.mutate(
       MutationOptions(
-        document: gql(widget.isEditMode ? updateHouseholdMutation : createHouseholdMutation),
-        variables: {
-          'input': payload,
-        },
+        document: gql(
+          widget.isEditMode ? updateHouseholdMutation : createHouseholdMutation,
+        ),
+        variables: {'input': payload},
       ),
     );
 
@@ -1011,10 +1076,14 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
     }
 
     ref.invalidate(householdsProvider(const HouseholdsQueryParams()));
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(
-      SnackBar(content: Text(widget.isEditMode ? 'Cập nhật hộ dân thành công' : 'Tạo hộ dân thành công')),
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          widget.isEditMode
+              ? 'Cập nhật hộ dân thành công'
+              : 'Tạo hộ dân thành công',
+        ),
+      ),
     );
     context.pop(true);
   }
@@ -1051,9 +1120,9 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
         setState(() {
           _isLoadingExisting = false;
         });
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Không tìm thấy hộ dân để cập nhật')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Không tìm thấy hộ dân để cập nhật')),
+        );
         return;
       }
 
@@ -1104,9 +1173,9 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
       setState(() {
         _isLoadingExisting = false;
       });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Không tải được dữ liệu hộ dân hiện tại')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Không tải được dữ liệu hộ dân hiện tại')),
+      );
     }
   }
 
@@ -1137,7 +1206,10 @@ class _SetupHouseholdScreenState extends ConsumerState<SetupHouseholdScreen> {
     return false;
   }
 
-  String _graphqlErrorMessage(OperationException? exception, String fallbackMessage) {
+  String _graphqlErrorMessage(
+    OperationException? exception,
+    String fallbackMessage,
+  ) {
     if (exception == null) {
       return fallbackMessage;
     }

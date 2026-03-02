@@ -32,7 +32,7 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
           icon: const Icon(Icons.arrow_back_ios_new, size: 20),
         ),
         title: const Text(
-          'Add New Resident',
+          'Thêm cư dân mới',
           style: TextStyle(fontWeight: .bold, fontSize: 18),
         ),
         centerTitle: true,
@@ -53,7 +53,7 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
                 child: Column(
                   crossAxisAlignment: .start,
                   children: [
-                    _buildSectionHeader('Identity'),
+                    _buildSectionHeader('Danh tính'),
                     _buildFieldLabel('Họ và tên'),
                     _buildTextField(
                       controller: _nameController,
@@ -72,13 +72,13 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
                     const SizedBox(height: 24),
                     const Divider(),
                     const SizedBox(height: 24),
-                    _buildSectionHeader('Demographics'),
+                    _buildSectionHeader('Nhân khẩu học'),
                     _buildFieldLabel('Giới tính'),
                     _buildGenderSelection(),
                     const SizedBox(height: 24),
                     const Divider(),
                     const SizedBox(height: 24),
-                    _buildSectionHeader('Contact Info'),
+                    _buildSectionHeader('Thông tin liên hệ'),
                     _buildFieldLabel('Số điện thoại'),
                     _buildTextField(
                       controller: _phoneController,

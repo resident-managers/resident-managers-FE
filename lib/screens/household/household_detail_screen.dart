@@ -27,7 +27,7 @@ class HouseholdDetailScreen extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back_ios_new, size: 18, color: Color(0xFF137FEC)),
         ),
         title: const Text(
-          'Full Household',
+          'Chi tiết hộ dân',
           style: TextStyle(
             color: Color(0xFF111827),
             fontWeight: FontWeight.w700,
@@ -38,7 +38,7 @@ class HouseholdDetailScreen extends ConsumerWidget {
           TextButton(
             onPressed: () => context.push('/household/$householdId/edit'),
             child: const Text(
-              'Edit',
+              'Sửa',
               style: TextStyle(
                 color: Color(0xFF137FEC),
                 fontSize: 16,
@@ -53,7 +53,7 @@ class HouseholdDetailScreen extends ConsumerWidget {
         error: (err, _) => Center(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Text('Cannot load household: $err'),
+            child: Text('Không tải được hộ dân: $err'),
           ),
         ),
         data: (households) {
@@ -66,7 +66,7 @@ class HouseholdDetailScreen extends ConsumerWidget {
           }
 
           if (household == null) {
-            return const Center(child: Text('Household not found'));
+            return const Center(child: Text('Không tìm thấy hộ dân'));
           }
 
           return _HouseholdDetailBody(household: household);
@@ -105,7 +105,7 @@ class _HouseholdDetailBody extends StatelessWidget {
                     Icon(Icons.groups, color: Color(0xFF137FEC), size: 18),
                     SizedBox(width: 8),
                     Text(
-                      'Members',
+                      'Thành viên',
                       style: TextStyle(
                         color: Color(0xFF1F2937),
                         fontWeight: FontWeight.w700,
@@ -121,7 +121,7 @@ class _HouseholdDetailBody extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'No members in this household',
+                      'Hộ dân chưa có thành viên',
                       style: TextStyle(
                         color: Color(0xFF7C8A9F),
                         fontSize: 13,
@@ -177,7 +177,7 @@ class _HouseholdHeaderCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Household Information',
+                      'Thông tin hộ dân',
                       style: TextStyle(
                         color: Color(0xFF111827),
                         fontWeight: FontWeight.w700,
@@ -186,7 +186,7 @@ class _HouseholdHeaderCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Code: ${_display(household.householdCode)}',
+                      'Mã hộ: ${_display(household.householdCode)}',
                       style: const TextStyle(
                         color: Color(0xFF64748B),
                         fontSize: 12,
@@ -201,19 +201,19 @@ class _HouseholdHeaderCard extends StatelessWidget {
           const SizedBox(height: 12),
           _InfoLine(
             icon: Icons.person,
-            label: 'Head',
+            label: 'Chủ hộ',
             value: head?.fullName ?? '-',
           ),
           const SizedBox(height: 8),
           _InfoLine(
             icon: Icons.location_on,
-            label: 'Address',
+            label: 'Địa chỉ',
             value: household.address.isEmpty ? '-' : household.address,
           ),
           const SizedBox(height: 8),
           _InfoLine(
             icon: Icons.groups_2,
-            label: 'Total residents',
+            label: 'Tổng nhân khẩu',
             value: '${members.length}',
           ),
         ],
@@ -326,7 +326,7 @@ class _MemberTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'ID: #${resident.id} • $relation',
+                  'Mã: #${resident.id} • $relation',
                   style: const TextStyle(
                     color: Color(0xFF7C8A9F),
                     fontWeight: FontWeight.w600,

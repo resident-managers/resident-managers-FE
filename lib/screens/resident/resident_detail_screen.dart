@@ -21,25 +21,22 @@ class ResidentDetailScreen extends ConsumerWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
-        leadingWidth: 92,
+        leadingWidth: 56,
         leading: IconButton(
-          onPressed: () => context.pop(),
-          icon: const Row(
-            children: [
-              Icon(Icons.arrow_back_ios_new, color: Color(0xFF137FEC), size: 17),
-              SizedBox(width: 2),
-              Text(
-                'Back',
-                style: TextStyle(
-                  color: Color(0xFF137FEC),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+              return;
+            }
+            context.go('/directory');
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Color(0xFF137FEC),
+            size: 18,
           ),
         ),
-        title: const Text('Resident Details'),
+        title: const Text('Chi tiết cư dân'),
         centerTitle: true,
         titleTextStyle: const TextStyle(
           color: Color(0xFF1F2937),
@@ -54,7 +51,7 @@ class ResidentDetailScreen extends ConsumerWidget {
               );
             },
             child: const Text(
-              'Edit',
+              'Sửa',
               style: TextStyle(
                 color: Color(0xFF137FEC),
                 fontSize: 16,
@@ -69,7 +66,7 @@ class ResidentDetailScreen extends ConsumerWidget {
         error: (err, _) => Center(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Text('Cannot load resident: $err'),
+            child: Text('Không tải được thông tin cư dân: $err'),
           ),
         ),
         data: (resident) => _ResidentDetailsBody(resident: resident),
@@ -161,7 +158,7 @@ class _ResidentDetailsBody extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'NIK: ${_displayValue(resident.identityCard)}',
+            'CCCD: ${_displayValue(resident.identityCard)}',
             style: const TextStyle(
               color: Color(0xFF8293A8),
               fontSize: 14,
@@ -181,7 +178,7 @@ class _ResidentDetailsBody extends StatelessWidget {
                 Icon(Icons.circle, size: 8, color: Color(0xFF10B981)),
                 SizedBox(width: 6),
                 Text(
-                  'ACTIVE RESIDENT',
+                  'CƯ DÂN ĐANG CƯ TRÚ',
                   style: TextStyle(
                     color: Color(0xFF0F8F5B),
                     letterSpacing: 0.7,
@@ -233,7 +230,7 @@ class _ResidentDetailsBody extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Household Info',
+                          'Thông tin hộ dân',
                           style: TextStyle(
                             color: Color(0xFF1F2937),
                             fontSize: 14,
@@ -242,7 +239,7 @@ class _ResidentDetailsBody extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'Head: ${_displayValue(resident.household?.headName)}',
+                          'Chủ hộ: ${_displayValue(resident.household?.headName)}',
                           style: const TextStyle(
                             color: Color(0xFF6B7280),
                             fontSize: 12,
@@ -290,7 +287,7 @@ class _ResidentDetailsBody extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        'View Full Household',
+                        'Xem chi tiết hộ dân',
                         style: TextStyle(
                           color: Color(0xFF137FEC),
                           fontSize: 14,
@@ -324,14 +321,14 @@ class _ResidentDetailsBody extends StatelessWidget {
               icon: Icons.person,
               iconColor: const Color(0xFF98A2B3),
               iconBackground: const Color(0xFFF2F4F7),
-              label: 'GENDER',
+              label: 'GIỚI TÍNH',
               value: resident.gender.toVnString(),
             ),
             _DetailRow(
               icon: Icons.call,
               iconColor: const Color(0xFF16A34A),
               iconBackground: const Color(0xFFDCFCE7),
-              label: 'PHONE NUMBER',
+              label: 'SỐ ĐIỆN THOẠI',
               value: _formatPhone(resident.phone),
               onTap: () => _callPhone(context, resident.phone),
             ),
@@ -339,14 +336,14 @@ class _ResidentDetailsBody extends StatelessWidget {
               icon: Icons.work,
               iconColor: const Color(0xFF98A2B3),
               iconBackground: const Color(0xFFF2F4F7),
-              label: 'OCCUPATION',
+              label: 'NGHỀ NGHIỆP',
               value: _displayValue(resident.occupation),
             ),
             _DetailRow(
               icon: Icons.location_on,
               iconColor: const Color(0xFF98A2B3),
               iconBackground: const Color(0xFFF2F4F7),
-              label: 'ADDRESS',
+              label: 'ĐỊA CHỈ',
               value: _displayValue(resident.address),
               hasBottomBorder: false,
               child: _buildMapPreview(),
@@ -385,7 +382,7 @@ class _ResidentDetailsBody extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Text(
-                    'View Map',
+                    'Xem bản đồ',
                     style: TextStyle(
                       color: Color(0xFF1F2937),
                       fontSize: 13,
@@ -430,7 +427,7 @@ class _ResidentDetailsBody extends StatelessWidget {
                     Icon(Icons.chat, size: 17, color: Color(0xFF6B7280)),
                     SizedBox(height: 2),
                     Text(
-                      'CHAT',
+                      'NHẮN TIN',
                       style: TextStyle(
                         fontSize: 10,
                         color: Color(0xFF6B7280),
@@ -456,7 +453,7 @@ class _ResidentDetailsBody extends StatelessWidget {
                   ),
                   icon: const Icon(Icons.call, size: 20),
                   label: const Text(
-                    'Call Resident',
+                    'Gọi cư dân',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                   ),
                 ),

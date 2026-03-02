@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../models/household.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/household_provider.dart';
 
 class HouseholdListScreen extends ConsumerStatefulWidget {
@@ -80,6 +81,7 @@ class _HouseholdListScreenState extends ConsumerState<HouseholdListScreen> {
         shape: const CircleBorder(),
         child: const Icon(Icons.add, color: Colors.white, size: 28),
       ),
+      bottomNavigationBar: _buildBottomNav(),
     );
   }
 
@@ -92,17 +94,9 @@ class _HouseholdListScreenState extends ConsumerState<HouseholdListScreen> {
         children: [
           Row(
             children: [
-              IconButton(
-                onPressed: () => context.pop(),
-                icon: const Icon(Icons.arrow_back_ios_new, size: 18),
-                style: IconButton.styleFrom(
-                  backgroundColor: const Color(0xFFF1F5F9),
-                ),
-              ),
-              const SizedBox(width: 8),
               const Expanded(
                 child: Text(
-                  'Households',
+                  'Hộ dân',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -117,7 +111,7 @@ class _HouseholdListScreenState extends ConsumerState<HouseholdListScreen> {
             controller: _searchController,
             onChanged: (value) => setState(() => _keyword = value),
             decoration: InputDecoration(
-              hintText: 'Search by code, address, head...',
+              hintText: 'Tìm theo mã hộ, địa chỉ, chủ hộ...',
               prefixIcon: const Icon(Icons.search, color: Color(0xFF94A3B8)),
               suffixIcon: IconButton(
                 onPressed: () {
@@ -138,6 +132,126 @@ class _HouseholdListScreenState extends ConsumerState<HouseholdListScreen> {
                 borderSide: BorderSide.none,
               ),
               contentPadding: const EdgeInsets.symmetric(vertical: 12),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomNav() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Colors.blueGrey.shade50)),
+      ),
+      padding: const EdgeInsets.only(top: 8, bottom: 24),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildNavItem(
+            Icons.group,
+            'Cư dân',
+            false,
+            onTap: () => context.go('/directory'),
+          ),
+          _buildNavItem(Icons.house, 'Hộ dân', true),
+          _buildNavItem(
+            Icons.account_circle,
+            'Tài khoản',
+            false,
+            onTap: _onProfileTap,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _onProfileTap() async {
+    final shouldLogout = await showModalBottomSheet<bool>(
+      context: context,
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const ListTile(
+                  leading: Icon(Icons.account_circle_outlined),
+                  title: Text('Tài khoản'),
+                  subtitle: Text('Thao tác tài khoản'),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => Navigator.of(sheetContext).pop(true),
+                    icon: const Icon(Icons.logout),
+                    label: const Text('Đăng xuất'),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () => Navigator.of(sheetContext).pop(false),
+                    child: const Text('Hủy'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (shouldLogout != true) {
+      return;
+    }
+
+    await ref.read(authProvider.notifier).logout();
+    if (!mounted) {
+      return;
+    }
+    context.go('/login');
+  }
+
+  Widget _buildNavItem(
+    IconData icon,
+    String label,
+    bool isActive, {
+    VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            decoration: BoxDecoration(
+              color: isActive
+                  ? const Color(0xFF137fec).withValues(alpha: 0.1)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              icon,
+              color: isActive
+                  ? const Color(0xFF137fec)
+                  : const Color(0xFF94A3B8),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+              color: isActive
+                  ? const Color(0xFF137fec)
+                  : const Color(0xFF94A3B8),
             ),
           ),
         ],

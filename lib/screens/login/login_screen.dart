@@ -64,7 +64,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const SizedBox(height: 24),
               const Center(
                 child: Text(
-                  'Resident Management',
+                  'Quản lý dân cư',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: .bold,
@@ -74,13 +74,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               const Center(
                 child: Text(
-                  'Login to access your dashboard',
+                  'Đăng nhập để truy cập hệ thống',
                   style: TextStyle(fontSize: 14, color: Color(0xFF64748B)),
                 ),
               ),
               const SizedBox(height: 48),
               const Text(
-                'Email Address',
+                'Email',
                 style: TextStyle(fontWeight: .w500, fontSize: 14),
               ),
               const SizedBox(height: 8),
@@ -99,7 +99,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               const SizedBox(height: 20),
               const Text(
-                'Password',
+                'Mật khẩu',
                 style: TextStyle(fontWeight: .w500, fontSize: 14),
               ),
               const SizedBox(height: 8),
@@ -133,7 +133,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: TextButton(
                   onPressed: () {},
                   child: const Text(
-                    'Forgot Password?',
+                    'Quên mật khẩu?',
                     style: TextStyle(
                       color: Color(0xFF137fec),
                       fontWeight: .w500,
@@ -179,7 +179,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       )
                     : const Text(
-                        'Sign In',
+                        'Đăng nhập',
                         style: TextStyle(fontSize: 16, fontWeight: .bold),
                       ),
               ),
@@ -188,13 +188,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 mainAxisAlignment: .center,
                 children: [
                   const Text(
-                    "Don't have an account?",
+                    'Chưa có tài khoản?',
                     style: TextStyle(color: Color(0xFF64748B)),
                   ),
                   TextButton(
                     onPressed: () {},
                     child: const Text(
-                      'Contact Admin',
+                      'Liên hệ quản trị viên',
                       style: TextStyle(
                         color: Color(0xFF137fec),
                         fontWeight: .bold,
