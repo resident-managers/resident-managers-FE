@@ -83,9 +83,8 @@ class _ResidentDirectoryScreenState
             ),
             const SizedBox(height: 16),
             OutlinedButton(
-              onPressed: () => ref.invalidate(
-                residentsProvider(_queryParams()),
-              ),
+              onPressed: () =>
+                  ref.invalidate(residentsProvider(_queryParams())),
               child: const Text('Thử lại'),
             ),
           ],
@@ -143,9 +142,7 @@ class _ResidentDirectoryScreenState
                       : Icons.arrow_upward,
                   color: const Color(0xFF94A3B8),
                 ),
-                tooltip: _sortOrder == 'ASC'
-                    ? 'Sắp xếp: A-Z'
-                    : 'Sắp xếp: Z-A',
+                tooltip: _sortOrder == 'ASC' ? 'Sắp xếp: A-Z' : 'Sắp xếp: Z-A',
               ),
               filled: true,
               fillColor: const Color(0xFFF6F7F8),
@@ -310,7 +307,9 @@ class _ResidentDirectoryScreenState
       return;
     }
 
-    await ref.read(authProvider.notifier).logout();
+    try {
+      await ref.read(authProvider.notifier).logout();
+    } catch (_) {}
     if (!mounted) {
       return;
     }

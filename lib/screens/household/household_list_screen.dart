@@ -9,7 +9,8 @@ class HouseholdListScreen extends ConsumerStatefulWidget {
   const HouseholdListScreen({super.key});
 
   @override
-  ConsumerState<HouseholdListScreen> createState() => _HouseholdListScreenState();
+  ConsumerState<HouseholdListScreen> createState() =>
+      _HouseholdListScreenState();
 }
 
 class _HouseholdListScreenState extends ConsumerState<HouseholdListScreen> {
@@ -120,7 +121,9 @@ class _HouseholdListScreenState extends ConsumerState<HouseholdListScreen> {
                   });
                 },
                 icon: Icon(
-                  _sortOrder == 'ASC' ? Icons.arrow_downward : Icons.arrow_upward,
+                  _sortOrder == 'ASC'
+                      ? Icons.arrow_downward
+                      : Icons.arrow_upward,
                   color: const Color(0xFF94A3B8),
                 ),
                 tooltip: _sortOrder == 'ASC' ? 'Sắp xếp: A-Z' : 'Sắp xếp: Z-A',
@@ -210,7 +213,9 @@ class _HouseholdListScreenState extends ConsumerState<HouseholdListScreen> {
       return;
     }
 
-    await ref.read(authProvider.notifier).logout();
+    try {
+      await ref.read(authProvider.notifier).logout();
+    } catch (_) {}
     if (!mounted) {
       return;
     }

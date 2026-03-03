@@ -24,7 +24,11 @@ class HouseholdDetailScreen extends ConsumerWidget {
         elevation: 0,
         leading: IconButton(
           onPressed: () => context.pop(),
-          icon: const Icon(Icons.arrow_back_ios_new, size: 18, color: Color(0xFF137FEC)),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            size: 18,
+            color: Color(0xFF137FEC),
+          ),
         ),
         title: const Text(
           'Chi tiết hộ dân',
@@ -286,57 +290,77 @@ class _MemberTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final resident = member.resident;
-    final fullName = resident.fullName.trim().isEmpty ? '-' : resident.fullName.trim();
+    final residentId = resident.id.trim();
+    final canOpenDetail = residentId.isNotEmpty;
+    final fullName = resident.fullName.trim().isEmpty
+        ? '-'
+        : resident.fullName.trim();
     final relation =
-        EnumMapper.relationshipToVietnamese(member.relationship, resident.gender) ??
+        EnumMapper.relationshipToVietnamese(
+          member.relationship,
+          resident.gender,
+        ) ??
         (member.relationship.trim().isEmpty ? '-' : member.relationship.trim());
     final initials = _initials(fullName);
 
-    return Container(
-      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-      decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: Color(0xFFE5EAF1))),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 18,
-            backgroundColor: const Color(0xFFDCEBFD),
-            child: Text(
-              initials,
-              style: const TextStyle(
-                color: Color(0xFF137FEC),
-                fontWeight: FontWeight.w700,
-                fontSize: 12,
+    return InkWell(
+      onTap: canOpenDetail
+          ? () => context.push('/resident-detail/$residentId')
+          : null,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+        decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: Color(0xFFE5EAF1))),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: const Color(0xFFDCEBFD),
+              child: Text(
+                initials,
+                style: const TextStyle(
+                  color: Color(0xFF137FEC),
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12,
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  fullName,
-                  style: const TextStyle(
-                    color: Color(0xFF111827),
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    fullName,
+                    style: const TextStyle(
+                      color: Color(0xFF111827),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'Mã: #${resident.id} • $relation',
-                  style: const TextStyle(
-                    color: Color(0xFF7C8A9F),
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
+                  const SizedBox(height: 2),
+                  Text(
+                    'Mã: #${resident.id} • $relation',
+                    style: const TextStyle(
+                      color: Color(0xFF7C8A9F),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+            if (canOpenDetail) ...[
+              const SizedBox(width: 8),
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: Color(0xFF9AA5B5),
+                size: 20,
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }

@@ -11,6 +11,12 @@ const String loginMutation = r'''
   }
 ''';
 
+const String logoutMutation = r'''
+  mutation Logout {
+    logout
+  }
+''';
+
 const String createResidentMutation = r'''
   mutation CreateResident($input: ResidentCreateInput!) {
     residentCreate(input: $input) {
