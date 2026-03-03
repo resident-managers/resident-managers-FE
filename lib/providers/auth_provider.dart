@@ -72,7 +72,24 @@ class Auth extends _$Auth {
   }
 
   Future<void> logout() async {
-    await _storage.deleteToken();
+    final client = GraphQLConfig.client.value;
+
+    try {
+      await client
+          .mutate(
+            MutationOptions(
+              document: gql(logoutMutation),
+              fetchPolicy: FetchPolicy.noCache,
+            ),
+          )
+          .timeout(const Duration(seconds: 6));
+    } catch (_) {
+      // Always continue local logout even if backend logout fails.
+    }
+
+    try {
+      await _storage.deleteToken();
+    } catch (_) {}
     GraphQLConfig.updateClient();
     state = AuthState(isAuthenticated: false);
   }

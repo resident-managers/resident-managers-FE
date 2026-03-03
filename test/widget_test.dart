@@ -21,7 +21,7 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: MyApp()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Resident Management'), findsOneWidget);
-    expect(find.text('Sign In'), findsOneWidget);
+    expect(find.text('Quản lý dân cư'), findsOneWidget);
+    expect(find.text('Đăng nhập'), findsOneWidget);
   });
 }

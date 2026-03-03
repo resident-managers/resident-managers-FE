@@ -4,11 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'core/graphql_client.dart';
-import 'screens/dan_cu/resident_directory_screen.dart';
-import 'screens/dan_cu/add_resident_screen.dart';
-import 'screens/dan_cu/resident_detail_screen.dart';
-import 'screens/ho_dan/household_list_screen.dart';
-import 'screens/ho_dan/setup_household_screen.dart';
+import 'screens/resident/resident_directory_screen.dart';
+import 'screens/resident/add_resident_screen.dart';
+import 'screens/resident/resident_detail_screen.dart';
+import 'screens/household/household_list_screen.dart';
+import 'screens/household/household_detail_screen.dart';
+import 'screens/household/setup_household_screen.dart';
 import 'screens/login/login_screen.dart';
 
 void main() async {
@@ -42,8 +43,25 @@ final _router = GoRouter(
       builder: (context, state) => const HouseholdListScreen(),
     ),
     GoRoute(
+      path: '/household/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return HouseholdDetailScreen(householdId: id);
+      },
+    ),
+    GoRoute(
       path: '/setup-household',
-      builder: (context, state) => const SetupHouseholdScreen(),
+      builder: (context, state) => const SetupHouseholdScreen(isEditMode: false),
+    ),
+    GoRoute(
+      path: '/household/:id/edit',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return SetupHouseholdScreen(
+          isEditMode: true,
+          householdId: id,
+        );
+      },
     ),
   ],
 );
