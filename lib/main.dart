@@ -11,6 +11,9 @@ import 'screens/household/household_list_screen.dart';
 import 'screens/household/household_detail_screen.dart';
 import 'screens/household/setup_household_screen.dart';
 import 'screens/login/login_screen.dart';
+import 'screens/home/dashboard_screen.dart';
+import 'screens/resident/edit_resident_screen.dart';
+import 'models/resident.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +26,7 @@ final _router = GoRouter(
   initialLocation: '/login',
   routes: [
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
+    GoRoute(path: '/dashboard', builder: (context, state) => const DashboardScreen()),
     GoRoute(
       path: '/directory',
       builder: (context, state) => const ResidentDirectoryScreen(),
@@ -36,6 +40,13 @@ final _router = GoRouter(
       builder: (context, state) {
         final id = state.pathParameters['id']!;
         return ResidentDetailScreen(residentId: id);
+      },
+    ),
+    GoRoute(
+      path: '/resident-detail/:id/edit',
+      builder: (context, state) {
+        final resident = state.extra as Resident;
+        return EditResidentScreen(resident: resident);
       },
     ),
     GoRoute(
