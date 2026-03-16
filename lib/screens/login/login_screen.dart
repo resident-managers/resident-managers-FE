@@ -26,7 +26,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     ref.listen<AuthState>(authProvider, (prev, next) {
       if (next.isAuthenticated && mounted) {
-        context.go('/directory');
+        context.go('/dashboard');
       }
       if (next.error != null && mounted) {
         ScaffoldMessenger.of(

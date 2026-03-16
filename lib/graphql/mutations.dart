@@ -98,3 +98,135 @@ const String deleteHouseholdMutation = r'''
     }
   }
 ''';
+
+const String createHealthInsuranceMutation = r'''
+  mutation CreateHealthInsurance($input: HealthInsuranceCreateInput!) {
+    healthInsuranceCreate(input: $input) {
+      id
+      code
+      healthcareFacility
+      issuedDate
+      expiryDate
+    }
+  }
+''';
+
+const String updateHealthInsuranceMutation = r'''
+  mutation UpdateHealthInsurance($input: HealthInsuranceUpdateInput!) {
+    healthInsuranceUpdate(input: $input) {
+      id
+      code
+      healthcareFacility
+      issuedDate
+      expiryDate
+    }
+  }
+''';
+
+const String deleteHealthInsuranceMutation = r'''
+  mutation DeleteHealthInsurance($id: ID!) {
+    healthInsuranceDelete(id: $id) {
+      id
+    }
+  }
+''';
+
+const String createSocialInsuranceMutation = r'''
+  mutation CreateSocialInsurance($input: SocialInsuranceCreateInput!) {
+    socialInsuranceCreate(input: $input) {
+      id
+      code
+      employer
+      enrolledDate
+      insuranceType
+      status
+    }
+  }
+''';
+
+const String updateSocialInsuranceMutation = r'''
+  mutation UpdateSocialInsurance($input: SocialInsuranceUpdateInput!) {
+    socialInsuranceUpdate(input: $input) {
+      id
+      code
+      employer
+      enrolledDate
+      insuranceType
+      status
+    }
+  }
+''';
+
+const String deleteSocialInsuranceMutation = r'''
+  mutation DeleteSocialInsurance($id: ID!) {
+    socialInsuranceDelete(id: $id) {
+      id
+    }
+  }
+''';
+
+const String createTemporaryResidenceMutation = r'''
+  mutation CreateTemporaryResidence($input: TemporaryResidenceCreateInput!) {
+    temporaryResidenceCreate(input: $input) {
+      id
+      address
+      hostName
+      fromDate
+      toDate
+      reason
+    }
+  }
+''';
+
+const String updateTemporaryResidenceMutation = r'''
+  mutation UpdateTemporaryResidence($input: TemporaryResidenceUpdateInput!) {
+    temporaryResidenceUpdate(input: $input) {
+      id
+      address
+      hostName
+      fromDate
+      toDate
+      reason
+    }
+  }
+''';
+
+const String deleteTemporaryResidenceMutation = r'''
+  mutation DeleteTemporaryResidence($id: ID!) {
+    temporaryResidenceDelete(id: $id) {
+      id
+    }
+  }
+''';
+
+const String createTemporaryAbsenceMutation = r'''
+  mutation CreateTemporaryAbsence($input: TemporaryAbsenceCreateInput!) {
+    temporaryAbsenceCreate(input: $input) {
+      id
+      destination
+      fromDate
+      toDate
+      reason
+    }
+  }
+''';
+
+const String updateTemporaryAbsenceMutation = r'''
+  mutation UpdateTemporaryAbsence($input: TemporaryAbsenceUpdateInput!) {
+    temporaryAbsenceUpdate(input: $input) {
+      id
+      destination
+      fromDate
+      toDate
+      reason
+    }
+  }
+''';
+
+const String deleteTemporaryAbsenceMutation = r'''
+  mutation DeleteTemporaryAbsence($id: ID!) {
+    temporaryAbsenceDelete(id: $id) {
+      id
+    }
+  }
+''';
