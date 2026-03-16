@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum Gender {
   nam,
   nu;
@@ -117,6 +119,8 @@ class Resident {
   final DateTime? createdAt;
   final ResidentHousehold? household;
   final String? relationship;
+  final String? residenceType;
+  final String? permanentAddress;
 
   Resident({
     required this.id,
@@ -134,6 +138,8 @@ class Resident {
     this.createdAt,
     this.household,
     this.relationship,
+    this.residenceType,
+    this.permanentAddress,
   });
 
   factory Resident.fromJson(Map<String, dynamic> json) {
@@ -178,7 +184,39 @@ class Resident {
       household: householdJson != null
           ? ResidentHousehold.fromJson(householdJson)
           : null,
+      residenceType: json['residenceType']?.toString(),
+      permanentAddress: json['permanentAddress']?.toString(),
     );
+  }
+
+  String residenceTypeBadge() {
+    switch (residenceType) {
+      case 'PERMANENT': return 'THƯỜNG TRÚ';
+      case 'TEMPORARY': return 'TẠM TRÚ';
+      case 'ABSENT': return 'TẠM VẮNG';
+      case 'MOVED_OUT': return 'ĐÃ CHUYỂN ĐI';
+      default: return 'ĐANG CƯ TRÚ';
+    }
+  }
+
+  Color residenceTypeColor() {
+    switch (residenceType) {
+      case 'PERMANENT': return const Color(0xFF10B981);
+      case 'TEMPORARY': return const Color(0xFFF59E0B);
+      case 'ABSENT': return const Color(0xFF6366F1);
+      case 'MOVED_OUT': return const Color(0xFFEF4444);
+      default: return const Color(0xFF10B981);
+    }
+  }
+
+  Color residenceTypeBgColor() {
+    switch (residenceType) {
+      case 'PERMANENT': return const Color(0xFFC8F1DF);
+      case 'TEMPORARY': return const Color(0xFFFEF3C7);
+      case 'ABSENT': return const Color(0xFFE0E7FF);
+      case 'MOVED_OUT': return const Color(0xFFFEE2E2);
+      default: return const Color(0xFFC8F1DF);
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/resident_provider.dart';
 import '../../models/resident.dart';
 
@@ -237,126 +236,23 @@ class _ResidentDirectoryScreenState
   }
 
   Widget _buildBottomNav() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Colors.blueGrey.shade50)),
-      ),
-      padding: const EdgeInsets.only(top: 8, bottom: 24),
-      child: Row(
-        mainAxisAlignment: .spaceAround,
-        children: [
-          _buildNavItem(Icons.group, 'Cư dân', true),
-          _buildNavItem(
-            Icons.house,
-            'Hộ dân',
-            false,
-            onTap: () => context.go('/households'),
-          ),
-          _buildNavItem(
-            Icons.account_circle,
-            'Tài khoản',
-            false,
-            onTap: _onProfileTap,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _onProfileTap() async {
-    final shouldLogout = await showModalBottomSheet<bool>(
-      context: context,
-      builder: (sheetContext) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const ListTile(
-                  leading: Icon(Icons.account_circle_outlined),
-                  title: Text('Tài khoản'),
-                  subtitle: Text('Thao tác tài khoản'),
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () => Navigator.of(sheetContext).pop(true),
-                    icon: const Icon(Icons.logout),
-                    label: const Text('Đăng xuất'),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  child: TextButton(
-                    onPressed: () => Navigator.of(sheetContext).pop(false),
-                    child: const Text('Hủy'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
+    return NavigationBar(
+      selectedIndex: 1,
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.transparent,
+      indicatorColor: const Color(0xFFE8F1FE),
+      destinations: const [
+        NavigationDestination(icon: Icon(Icons.dashboard_rounded), label: 'Tổng quan'),
+        NavigationDestination(icon: Icon(Icons.people_rounded), label: 'Cư dân'),
+        NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Hộ dân'),
+      ],
+      onDestinationSelected: (i) {
+        if (i == 0) context.go('/dashboard');
+        if (i == 2) context.go('/households');
       },
     );
-
-    if (shouldLogout != true) {
-      return;
-    }
-
-    try {
-      await ref.read(authProvider.notifier).logout();
-    } catch (_) {}
-    if (!mounted) {
-      return;
-    }
-    context.go('/login');
   }
 
-  Widget _buildNavItem(
-    IconData icon,
-    String label,
-    bool isActive, {
-    VoidCallback? onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: .min,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            decoration: BoxDecoration(
-              color: isActive
-                  ? const Color(0xFF137fec).withValues(alpha: 0.1)
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              icon,
-              color: isActive
-                  ? const Color(0xFF137fec)
-                  : const Color(0xFF94A3B8),
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-              color: isActive
-                  ? const Color(0xFF137fec)
-                  : const Color(0xFF94A3B8),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 class ResidentCard extends StatelessWidget {

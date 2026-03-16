@@ -18,9 +18,21 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
   final _idController = TextEditingController();
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
+  final _occupationController = TextEditingController();
+  final _ethnicityController = TextEditingController();
+  final _religionController = TextEditingController();
+  final _educationController = TextEditingController();
   DateTime? _selectedDate;
   String _selectedGender = 'Nam';
+  String _selectedResidenceType = 'PERMANENT';
   bool _isSaving = false;
+
+  final List<Map<String, String>> _residenceTypes = [
+    {'value': 'PERMANENT', 'label': 'Thường trú'},
+    {'value': 'TEMPORARY', 'label': 'Tạm trú'},
+    {'value': 'ABSENT', 'label': 'Tạm vắng'},
+    {'value': 'MOVED_OUT', 'label': 'Đã chuyển đi'},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +87,27 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
                     _buildSectionHeader('Nhân khẩu học'),
                     _buildFieldLabel('Giới tính'),
                     _buildGenderSelection(),
+                    const SizedBox(height: 16),
+                    _buildFieldLabel('Tình trạng cư trú'),
+                    _buildResidenceTypeDropdown(),
+                    const SizedBox(height: 16),
+                    _buildFieldLabel('Dân tộc'),
+                    _buildTextField(
+                      controller: _ethnicityController,
+                      hint: 'VD: Kinh, Tày...',
+                    ),
+                    const SizedBox(height: 16),
+                    _buildFieldLabel('Tôn giáo'),
+                    _buildTextField(
+                      controller: _religionController,
+                      hint: 'VD: Không, Phật giáo...',
+                    ),
+                    const SizedBox(height: 16),
+                    _buildFieldLabel('Trình độ học vấn'),
+                    _buildTextField(
+                      controller: _educationController,
+                      hint: 'VD: Đại học, THPT...',
+                    ),
                     const SizedBox(height: 24),
                     const Divider(),
                     const SizedBox(height: 24),
@@ -86,10 +119,16 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
                       keyboardType: TextInputType.phone,
                     ),
                     const SizedBox(height: 16),
-                    _buildFieldLabel('Địa chỉ thường trú'),
+                    _buildFieldLabel('Nghề nghiệp'),
+                    _buildTextField(
+                      controller: _occupationController,
+                      hint: 'Nhập nghề nghiệp',
+                    ),
+                    const SizedBox(height: 16),
+                    _buildFieldLabel('Địa chỉ hiện tại'),
                     _buildTextField(
                       controller: _addressController,
-                      hint: 'Nhập địa chỉ thường trú...',
+                      hint: 'Nhập địa chỉ hiện tại...',
                       maxLines: 4,
                     ),
                     const SizedBox(height: 100), // Space for sticky button
@@ -266,6 +305,36 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
     );
   }
 
+  Widget _buildResidenceTypeDropdown() {
+    return DropdownButtonFormField<String>(
+      // ignore: deprecated_member_use
+      value: _selectedResidenceType,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: const Color(0xFFF8FAFC),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.blueGrey.shade100),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.blueGrey.shade100),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Color(0xFF137fec)),
+        ),
+      ),
+      items: _residenceTypes
+          .map((t) => DropdownMenuItem(value: t['value'], child: Text(t['label']!)))
+          .toList(),
+      onChanged: (v) {
+        if (v != null) setState(() => _selectedResidenceType = v);
+      },
+    );
+  }
+
   Widget _buildStickyFooter() {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
@@ -345,6 +414,19 @@ class _AddResidentScreenState extends State<AddResidentScreen> {
             'address': _addressController.text.trim().isEmpty
                 ? null
                 : _addressController.text.trim(),
+            'occupation': _occupationController.text.trim().isEmpty
+                ? null
+                : _occupationController.text.trim(),
+            'ethnicity': _ethnicityController.text.trim().isEmpty
+                ? null
+                : _ethnicityController.text.trim(),
+            'religion': _religionController.text.trim().isEmpty
+                ? null
+                : _religionController.text.trim(),
+            'educationLevel': _educationController.text.trim().isEmpty
+                ? null
+                : _educationController.text.trim(),
+            'residenceType': _selectedResidenceType,
           },
         },
       ),
