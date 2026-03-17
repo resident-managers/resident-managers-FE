@@ -12,6 +12,8 @@ import '../../models/temporary_absence.dart';
 import '../../providers/resident_provider.dart';
 import '../../providers/insurance_provider.dart';
 import '../../providers/temporary_provider.dart';
+import '../../graphql/mutations.dart';
+import 'resident_crud_forms.dart';
 
 class ResidentDetailScreen extends ConsumerStatefulWidget {
   final String residentId;
@@ -255,13 +257,29 @@ class _ResidentDetailsBody extends ConsumerWidget {
       iconColor: const Color(0xFF10B981),
       iconBg: const Color(0xFFD1FAE5),
       title: 'Bảo hiểm y tế',
+      onAdd: () async {
+        final saved = await showHealthInsuranceForm(context, residentId: residentId);
+        if (saved == true) ref.invalidate(healthInsurancesProvider(residentId));
+      },
       child: insurancesAsync.when(
         loading: () => const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator(strokeWidth: 2))),
         error: (e, _) => Padding(padding: const EdgeInsets.all(16), child: Text('Lỗi: $e', style: const TextStyle(color: Color(0xFFEF4444)))),
         data: (list) {
           if (list.isEmpty) return const Padding(padding: EdgeInsets.all(16), child: Text('Chưa có thông tin bảo hiểm y tế', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 14)));
           return Column(
-            children: list.map((ins) => _HealthInsuranceTile(insurance: ins)).toList(),
+            children: list.map((ins) => _HealthInsuranceTile(
+              insurance: ins,
+              onEdit: () async {
+                final saved = await showHealthInsuranceForm(context, residentId: residentId, existing: ins);
+                if (saved == true) ref.invalidate(healthInsurancesProvider(residentId));
+              },
+              onDelete: () async {
+                final confirmed = await confirmDelete(context, 'Xóa BHYT ${ins.code}?');
+                if (!confirmed || !context.mounted) return;
+                final ok = await deleteRecord(context, deleteHealthInsuranceMutation, ins.id);
+                if (ok) ref.invalidate(healthInsurancesProvider(residentId));
+              },
+            )).toList(),
           );
         },
       ),
@@ -276,12 +294,28 @@ class _ResidentDetailsBody extends ConsumerWidget {
       iconColor: const Color(0xFF3B82F6),
       iconBg: const Color(0xFFDBEAFE),
       title: 'Bảo hiểm xã hội',
+      onAdd: () async {
+        final saved = await showSocialInsuranceForm(context, residentId: residentId);
+        if (saved == true) ref.invalidate(socialInsurancesProvider(residentId));
+      },
       child: insurancesAsync.when(
         loading: () => const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator(strokeWidth: 2))),
         error: (e, _) => Padding(padding: const EdgeInsets.all(16), child: Text('Lỗi: $e', style: const TextStyle(color: Color(0xFFEF4444)))),
         data: (list) {
           if (list.isEmpty) return const Padding(padding: EdgeInsets.all(16), child: Text('Chưa có thông tin bảo hiểm xã hội', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 14)));
-          return Column(children: list.map((ins) => _SocialInsuranceTile(insurance: ins)).toList());
+          return Column(children: list.map((ins) => _SocialInsuranceTile(
+            insurance: ins,
+            onEdit: () async {
+              final saved = await showSocialInsuranceForm(context, residentId: residentId, existing: ins);
+              if (saved == true) ref.invalidate(socialInsurancesProvider(residentId));
+            },
+            onDelete: () async {
+              final confirmed = await confirmDelete(context, 'Xóa BHXH ${ins.code}?');
+              if (!confirmed || !context.mounted) return;
+              final ok = await deleteRecord(context, deleteSocialInsuranceMutation, ins.id);
+              if (ok) ref.invalidate(socialInsurancesProvider(residentId));
+            },
+          )).toList());
         },
       ),
     );
@@ -295,12 +329,28 @@ class _ResidentDetailsBody extends ConsumerWidget {
       iconColor: const Color(0xFF0EA5E9),
       iconBg: const Color(0xFFE0F2FE),
       title: 'Đăng ký tạm trú',
+      onAdd: () async {
+        final saved = await showTemporaryResidenceForm(context, residentId: residentId);
+        if (saved == true) ref.invalidate(temporaryResidencesProvider(residentId));
+      },
       child: tempsAsync.when(
         loading: () => const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator(strokeWidth: 2))),
         error: (e, _) => Padding(padding: const EdgeInsets.all(16), child: Text('Lỗi: $e', style: const TextStyle(color: Color(0xFFEF4444)))),
         data: (list) {
           if (list.isEmpty) return const Padding(padding: EdgeInsets.all(16), child: Text('Chưa có đăng ký tạm trú', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 14)));
-          return Column(children: list.map((t) => _TemporaryResidenceTile(item: t)).toList());
+          return Column(children: list.map((t) => _TemporaryResidenceTile(
+            item: t,
+            onEdit: () async {
+              final saved = await showTemporaryResidenceForm(context, residentId: residentId, existing: t);
+              if (saved == true) ref.invalidate(temporaryResidencesProvider(residentId));
+            },
+            onDelete: () async {
+              final confirmed = await confirmDelete(context, 'Xóa đăng ký tạm trú này?');
+              if (!confirmed || !context.mounted) return;
+              final ok = await deleteRecord(context, deleteTemporaryResidenceMutation, t.id);
+              if (ok) ref.invalidate(temporaryResidencesProvider(residentId));
+            },
+          )).toList());
         },
       ),
     );
@@ -314,12 +364,28 @@ class _ResidentDetailsBody extends ConsumerWidget {
       iconColor: const Color(0xFF8B5CF6),
       iconBg: const Color(0xFFEDE9FE),
       title: 'Đăng ký tạm vắng',
+      onAdd: () async {
+        final saved = await showTemporaryAbsenceForm(context, residentId: residentId);
+        if (saved == true) ref.invalidate(temporaryAbsencesProvider(residentId));
+      },
       child: tempsAsync.when(
         loading: () => const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator(strokeWidth: 2))),
         error: (e, _) => Padding(padding: const EdgeInsets.all(16), child: Text('Lỗi: $e', style: const TextStyle(color: Color(0xFFEF4444)))),
         data: (list) {
           if (list.isEmpty) return const Padding(padding: EdgeInsets.all(16), child: Text('Chưa có đăng ký tạm vắng', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 14)));
-          return Column(children: list.map((t) => _TemporaryAbsenceTile(item: t)).toList());
+          return Column(children: list.map((t) => _TemporaryAbsenceTile(
+            item: t,
+            onEdit: () async {
+              final saved = await showTemporaryAbsenceForm(context, residentId: residentId, existing: t);
+              if (saved == true) ref.invalidate(temporaryAbsencesProvider(residentId));
+            },
+            onDelete: () async {
+              final confirmed = await confirmDelete(context, 'Xóa đăng ký tạm vắng này?');
+              if (!confirmed || !context.mounted) return;
+              final ok = await deleteRecord(context, deleteTemporaryAbsenceMutation, t.id);
+              if (ok) ref.invalidate(temporaryAbsencesProvider(residentId));
+            },
+          )).toList());
         },
       ),
     );
@@ -332,6 +398,7 @@ class _ResidentDetailsBody extends ConsumerWidget {
     required Color iconBg,
     required String title,
     required Widget child,
+    VoidCallback? onAdd,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -342,7 +409,23 @@ class _ResidentDetailsBody extends ConsumerWidget {
           child: ExpansionTile(
             leading: Container(width: 40, height: 40, decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(10)), child: Icon(icon, color: iconColor, size: 20)),
             title: Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF1F2937))),
-            tilePadding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (onAdd != null)
+                  GestureDetector(
+                    onTap: onAdd,
+                    child: Container(
+                      width: 28, height: 28,
+                      decoration: BoxDecoration(color: const Color(0xFFE8F1FE), borderRadius: BorderRadius.circular(6)),
+                      child: const Icon(Icons.add, size: 18, color: Color(0xFF137FEC)),
+                    ),
+                  ),
+                const SizedBox(width: 4),
+                const Icon(Icons.expand_more, color: Color(0xFF9CA3AF)),
+              ],
+            ),
+            tilePadding: const EdgeInsets.fromLTRB(14, 4, 10, 4),
             childrenPadding: EdgeInsets.zero,
             children: [const Divider(height: 1, color: Color(0xFFE5E7EB)), child],
           ),
@@ -470,16 +553,19 @@ class _ResidentDetailsBody extends ConsumerWidget {
 
 class _HealthInsuranceTile extends StatelessWidget {
   final HealthInsurance insurance;
-  const _HealthInsuranceTile({required this.insurance});
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+  const _HealthInsuranceTile({required this.insurance, this.onEdit, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
     final fmt = DateFormat('dd/MM/yyyy');
     final isExpired = insurance.isExpired;
     return Container(
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+      padding: const EdgeInsets.fromLTRB(14, 12, 6, 12),
       decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Color(0xFFF3F4F6)))),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Column(
@@ -511,6 +597,7 @@ class _HealthInsuranceTile extends StatelessWidget {
               ],
             ),
           ),
+          _TileActions(onEdit: onEdit, onDelete: onDelete),
         ],
       ),
     );
@@ -519,36 +606,46 @@ class _HealthInsuranceTile extends StatelessWidget {
 
 class _SocialInsuranceTile extends StatelessWidget {
   final SocialInsurance insurance;
-  const _SocialInsuranceTile({required this.insurance});
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+  const _SocialInsuranceTile({required this.insurance, this.onEdit, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
     final fmt = DateFormat('dd/MM/yyyy');
     return Container(
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+      padding: const EdgeInsets.fromLTRB(14, 12, 6, 12),
       decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Color(0xFFF3F4F6)))),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text(insurance.code, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF1F2937))),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(color: const Color(0xFFDBEAFE), borderRadius: BorderRadius.circular(4)),
-                child: Text(insurance.statusVn, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF3B82F6))),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(insurance.code, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF1F2937))),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(color: const Color(0xFFDBEAFE), borderRadius: BorderRadius.circular(4)),
+                      child: Text(insurance.statusVn, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF3B82F6))),
+                    ),
+                  ],
+                ),
+                if (insurance.employer != null) ...[const SizedBox(height: 2), Text(insurance.employer!, style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)))],
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Text('Loại: ${insurance.insuranceTypeVn}', style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF))),
+                    if (insurance.enrolledDate != null) Text(' · Tham gia: ${fmt.format(insurance.enrolledDate!)}', style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF))),
+                  ],
+                ),
+              ],
+            ),
           ),
-          if (insurance.employer != null) ...[const SizedBox(height: 2), Text(insurance.employer!, style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)))],
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Text('Loại: ${insurance.insuranceTypeVn}', style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF))),
-              if (insurance.enrolledDate != null) Text(' · Tham gia: ${fmt.format(insurance.enrolledDate!)}', style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF))),
-            ],
-          ),
+          _TileActions(onEdit: onEdit, onDelete: onDelete),
         ],
       ),
     );
@@ -557,34 +654,44 @@ class _SocialInsuranceTile extends StatelessWidget {
 
 class _TemporaryResidenceTile extends StatelessWidget {
   final TemporaryResidence item;
-  const _TemporaryResidenceTile({required this.item});
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+  const _TemporaryResidenceTile({required this.item, this.onEdit, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
     final fmt = DateFormat('dd/MM/yyyy');
     return Container(
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+      padding: const EdgeInsets.fromLTRB(14, 12, 6, 12),
       decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Color(0xFFF3F4F6)))),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(child: Text(item.address, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF1F2937)))),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(color: item.isActive ? const Color(0xFFD1FAE5) : const Color(0xFFF3F4F6), borderRadius: BorderRadius.circular(4)),
-                child: Text(item.isActive ? 'Đang tạm trú' : 'Đã kết thúc', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: item.isActive ? const Color(0xFF10B981) : const Color(0xFF9CA3AF))),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(child: Text(item.address, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF1F2937)))),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(color: item.isActive ? const Color(0xFFD1FAE5) : const Color(0xFFF3F4F6), borderRadius: BorderRadius.circular(4)),
+                      child: Text(item.isActive ? 'Đang tạm trú' : 'Đã kết thúc', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: item.isActive ? const Color(0xFF10B981) : const Color(0xFF9CA3AF))),
+                    ),
+                  ],
+                ),
+                if (item.hostName != null) ...[const SizedBox(height: 2), Text('Chủ nhà: ${item.hostName}', style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)))],
+                const SizedBox(height: 4),
+                Text(
+                  '${item.fromDate != null ? fmt.format(item.fromDate!) : '?'} → ${item.toDate != null ? fmt.format(item.toDate!) : 'Không xác định'}',
+                  style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)),
+                ),
+                if (item.reason != null) ...[const SizedBox(height: 2), Text('Lý do: ${item.reason}', style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)))],
+              ],
+            ),
           ),
-          if (item.hostName != null) ...[const SizedBox(height: 2), Text('Chủ nhà: ${item.hostName}', style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)))],
-          const SizedBox(height: 4),
-          Text(
-            '${item.fromDate != null ? fmt.format(item.fromDate!) : '?'} → ${item.toDate != null ? fmt.format(item.toDate!) : 'Không xác định'}',
-            style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)),
-          ),
-          if (item.reason != null) ...[const SizedBox(height: 2), Text('Lý do: ${item.reason}', style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)))],
+          _TileActions(onEdit: onEdit, onDelete: onDelete),
         ],
       ),
     );
@@ -593,35 +700,74 @@ class _TemporaryResidenceTile extends StatelessWidget {
 
 class _TemporaryAbsenceTile extends StatelessWidget {
   final TemporaryAbsence item;
-  const _TemporaryAbsenceTile({required this.item});
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+  const _TemporaryAbsenceTile({required this.item, this.onEdit, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
     final fmt = DateFormat('dd/MM/yyyy');
     return Container(
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+      padding: const EdgeInsets.fromLTRB(14, 12, 6, 12),
       decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Color(0xFFF3F4F6)))),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(child: Text(item.destination, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF1F2937)))),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(color: item.isActive ? const Color(0xFFEDE9FE) : const Color(0xFFF3F4F6), borderRadius: BorderRadius.circular(4)),
-                child: Text(item.isActive ? 'Đang vắng' : 'Đã về', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: item.isActive ? const Color(0xFF8B5CF6) : const Color(0xFF9CA3AF))),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(child: Text(item.destination, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF1F2937)))),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(color: item.isActive ? const Color(0xFFEDE9FE) : const Color(0xFFF3F4F6), borderRadius: BorderRadius.circular(4)),
+                      child: Text(item.isActive ? 'Đang vắng' : 'Đã về', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: item.isActive ? const Color(0xFF8B5CF6) : const Color(0xFF9CA3AF))),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${item.fromDate != null ? fmt.format(item.fromDate!) : '?'} → ${item.toDate != null ? fmt.format(item.toDate!) : 'Không xác định'}',
+                  style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)),
+                ),
+                if (item.reason != null) ...[const SizedBox(height: 2), Text('Lý do: ${item.reason}', style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)))],
+              ],
+            ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            '${item.fromDate != null ? fmt.format(item.fromDate!) : '?'} → ${item.toDate != null ? fmt.format(item.toDate!) : 'Không xác định'}',
-            style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)),
-          ),
-          if (item.reason != null) ...[const SizedBox(height: 2), Text('Lý do: ${item.reason}', style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)))],
+          _TileActions(onEdit: onEdit, onDelete: onDelete),
         ],
       ),
+    );
+  }
+}
+
+class _TileActions extends StatelessWidget {
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+  const _TileActions({this.onEdit, this.onDelete});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (onEdit != null)
+          IconButton(
+            onPressed: onEdit,
+            icon: const Icon(Icons.edit_outlined, size: 18, color: Color(0xFF6B7280)),
+            padding: const EdgeInsets.all(6),
+            constraints: const BoxConstraints(),
+          ),
+        if (onDelete != null)
+          IconButton(
+            onPressed: onDelete,
+            icon: const Icon(Icons.delete_outline, size: 18, color: Color(0xFFEF4444)),
+            padding: const EdgeInsets.all(6),
+            constraints: const BoxConstraints(),
+          ),
+      ],
     );
   }
 }
