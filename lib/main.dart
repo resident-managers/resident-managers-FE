@@ -11,6 +11,8 @@ import 'screens/household/household_list_screen.dart';
 import 'screens/household/household_detail_screen.dart';
 import 'screens/household/setup_household_screen.dart';
 import 'screens/login/login_screen.dart';
+import 'screens/auth/forgot_password_screen.dart';
+import 'screens/auth/reset_password_screen.dart';
 import 'screens/home/dashboard_screen.dart';
 import 'screens/resident/edit_resident_screen.dart';
 import 'models/resident.dart';
@@ -26,6 +28,15 @@ final _router = GoRouter(
   initialLocation: '/login',
   routes: [
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
+    GoRoute(
+      path: '/forgot-password',
+      builder: (_, __) => const ForgotPasswordScreen(),
+    ),
+    GoRoute(
+      path: '/reset-password',
+      builder: (_, state) =>
+          ResetPasswordScreen(email: state.extra as String? ?? ''),
+    ),
     GoRoute(path: '/dashboard', builder: (context, state) => const DashboardScreen()),
     GoRoute(
       path: '/directory',

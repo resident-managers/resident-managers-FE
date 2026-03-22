@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -131,7 +132,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () => context.push('/forgot-password'),
                   child: const Text(
                     'Quên mật khẩu?',
                     style: TextStyle(
@@ -192,7 +193,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     style: TextStyle(color: Color(0xFF64748B)),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () => launchUrl(
+                      Uri.parse('https://zalo.me/0839490365'),
+                      mode: LaunchMode.externalApplication,
+                    ),
                     child: const Text(
                       'Liên hệ quản trị viên',
                       style: TextStyle(
