@@ -30,7 +30,7 @@ final _router = GoRouter(
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(
       path: '/forgot-password',
-      builder: (_, __) => const ForgotPasswordScreen(),
+      builder: (_, _) => const ForgotPasswordScreen(),
     ),
     GoRoute(
       path: '/reset-password',
