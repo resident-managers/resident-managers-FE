@@ -10,6 +10,7 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(authProvider); // Keep provider alive to prevent race condition on logout
     final statsAsync = ref.watch(statisticsProvider);
 
     return Scaffold(

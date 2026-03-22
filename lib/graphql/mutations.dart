@@ -230,3 +230,29 @@ const String deleteTemporaryAbsenceMutation = r'''
     }
   }
 ''';
+
+const String forgotPasswordMutation = r'''
+  mutation ForgotPassword($email: String!) {
+    forgotPassword(email: $email) {
+      message
+    }
+  }
+''';
+
+const String resetPasswordMutation = r'''
+  mutation ResetPassword(
+    $token: String!
+    $email: String!
+    $password: String!
+    $password_confirmation: String!
+  ) {
+    resetPassword(
+      token: $token
+      email: $email
+      password: $password
+      password_confirmation: $password_confirmation
+    ) {
+      message
+    }
+  }
+''';
