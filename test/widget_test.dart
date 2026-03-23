@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'package:quan_ly_dan_cu/main.dart';
+import 'package:quan_ly_dan_cu/app_user.dart';
 
 void main() {
   testWidgets('App shows login screen', (WidgetTester tester) async {
@@ -18,7 +18,7 @@ void main() {
           'GRAPHQL_ENDPOINT=https://known-leech-fresh.ngrok-free.app/graphql',
     );
 
-    await tester.pumpWidget(const ProviderScope(child: MyApp()));
+    await tester.pumpWidget(const ProviderScope(child: AppUser()));
     await tester.pumpAndSettle();
 
     expect(find.text('Quản lý dân cư'), findsOneWidget);

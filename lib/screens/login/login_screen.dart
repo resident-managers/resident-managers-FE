@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../core/app_flavor.dart';
 import '../../providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -27,7 +28,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     ref.listen<AuthState>(authProvider, (prev, next) {
       if (next.isAuthenticated && mounted) {
-        context.go('/dashboard');
+        context.go(AppConfig.isAdmin ? '/admin-dashboard' : '/dashboard');
       }
       if (next.error != null && mounted) {
         ScaffoldMessenger.of(
@@ -63,20 +64,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              const Center(
+              Center(
                 child: Text(
-                  'Quản lý dân cư',
-                  style: TextStyle(
+                  AppConfig.isAdmin ? 'Quản lý dân cư - Admin' : 'Quản lý dân cư',
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: .bold,
                     color: Color(0xFF0F172A),
                   ),
                 ),
               ),
-              const Center(
+              Center(
                 child: Text(
-                  'Đăng nhập để truy cập hệ thống',
-                  style: TextStyle(fontSize: 14, color: Color(0xFF64748B)),
+                  AppConfig.isAdmin
+                      ? 'Đăng nhập với tài khoản quản trị viên'
+                      : 'Đăng nhập để truy cập hệ thống',
+                  style: const TextStyle(fontSize: 14, color: Color(0xFF64748B)),
                 ),
               ),
               const SizedBox(height: 48),
@@ -147,6 +150,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 onPressed: authState.isLoading
                     ? null
                     : () async {
+                        final router = GoRouter.of(context);
                         await ref
                             .read(authProvider.notifier)
                             .login(
@@ -158,7 +162,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         }
                         final current = ref.read(authProvider);
                         if (current.isAuthenticated) {
-                          GoRouter.of(this.context).go('/directory');
+                          router.go(
+                            AppConfig.isAdmin ? '/admin-dashboard' : '/directory',
+                          );
                         }
                       },
                 style: ElevatedButton.styleFrom(
