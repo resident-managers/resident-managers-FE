@@ -1,8 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import '../core/app_flavor.dart';
 import '../core/graphql_client.dart';
 import '../core/secure_storage.dart';
 import '../graphql/mutations.dart';
+import '../graphql/admin_mutations.dart';
 
 part 'auth_provider.g.dart';
 
@@ -43,9 +45,10 @@ class Auth extends _$Auth {
     state = AuthState(isLoading: true);
     final client = GraphQLConfig.client.value;
 
+    final isAdmin = AppConfig.isAdmin;
     final result = await client.mutate(
       MutationOptions(
-        document: gql(loginMutation),
+        document: gql(isAdmin ? adminLoginMutation : loginMutation),
         variables: {'email': email, 'password': password},
       ),
     );
@@ -59,8 +62,9 @@ class Auth extends _$Auth {
       return;
     }
 
+    final responseKey = isAdmin ? 'adminLogin' : 'login';
     final token =
-        (result.data?['login']?['access_token'] as String?) ??
+        (result.data?[responseKey]?['access_token'] as String?) ??
         (result.data?['dangNhap']?['token'] as String?);
     if (token != null && token.isNotEmpty) {
       try {
@@ -150,7 +154,7 @@ class Auth extends _$Auth {
     try {
       await _storage.deleteToken();
     } catch (_) {}
-    GraphQLConfig.updateClient();
     state = AuthState(isAuthenticated: false);
+    GraphQLConfig.updateClient();
   }
 }
