@@ -55,11 +55,20 @@ jobs:
       - name: Run tests
         run: flutter test
         
-      - name: Build APK
-        run: flutter build apk --release
+      - name: Build APK (user)
+        run: flutter build apk --release --flavor user -t lib/main.dart
 
-      - name: Upload APK
+      - name: Build APK (admin)
+        run: flutter build apk --release --flavor admin -t lib/main_admin.dart
+
+      - name: Upload APK (user)
         uses: actions/upload-artifact@v4
         with:
-          name: app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: app-user-release
+          path: build/app/outputs/flutter-apk/app-user-release.apk
+
+      - name: Upload APK (admin)
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-admin-release
+          path: build/app/outputs/flutter-apk/app-admin-release.apk
