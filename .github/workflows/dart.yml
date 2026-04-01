@@ -25,8 +25,8 @@ jobs:
           VERSION="v1.0.${{ github.run_number }}"
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git tag $VERSION
-          git push origin $VERSION
+          git tag $VERSION || true
+          git push origin $VERSION || true
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
   build:
@@ -85,5 +85,6 @@ jobs:
           gh release create ${{ needs.create-tag.outputs.version }} \
             --title "Release ${{ needs.create-tag.outputs.version }}" \
             --notes "Auto-release from CI" \
+            --clobber \
             app-user-release.apk \
             app-admin-release.apk
