@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Dart
+name: Build & Release
 
 on:
   push:
@@ -12,63 +12,78 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  create-tag:
     runs-on: ubuntu-latest
     permissions: write-all
-
+    outputs:
+      version: ${{ steps.tag.outputs.version }}
     steps:
       - uses: actions/checkout@v4
       - name: Create Tag
-        run: | 
-          VERSION="v1.0.${{ github.run_number }}" 
+        id: tag
+        run: |
+          VERSION="v1.0.${{ github.run_number }}"
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git tag $VERSION
           git push origin $VERSION
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      # Note: This workflow uses the latest stable version of the Dart SDK.
-      # You can specify other versions if desired, see documentation here:
-      # https://github.com/dart-lang/setup-dart/blob/main/README.md
-      # - uses: dart-lang/setup-dart@v1
+  build:
+    needs: create-tag
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
 
       - name: Install dependencies
         run: flutter pub get
-        
-      # Create env
-      - name: Create .env from example
-        run: |
-          echo "GRAPHQL_ENDPOINT=${{ secrets.GRAPHQL_ENDPOINT }}" >> .env
 
-
-      # Uncomment this step to verify the use of 'dart format' on each commit.
-      # - name: Verify formatting
-      #   run: dart format --output=none --set-exit-if-changed .
+      # Create .env from GitHub Environment variable
+      - name: Create .env
+        run: echo "GRAPHQL_ENDPOINT=${{ vars.GRAPHQL_ENDPOINT }}" >> .env
 
       # Consider passing '--fatal-infos' for slightly stricter analysis.
       - name: Analyze project source
         run: flutter analyze
 
-      # Your project will need to have tests in test/ and a dependency on
-      # package:test for this step to succeed. Note that Flutter projects will
-      # want to change this to 'flutter test'.
       - name: Run tests
         run: flutter test
-        
+
       - name: Build APK (user)
         run: flutter build apk --release --flavor user -t lib/main.dart
 
       - name: Build APK (admin)
         run: flutter build apk --release --flavor admin -t lib/main_admin.dart
 
-      - name: Upload APK (user)
+      - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: app-user-release
-          path: build/app/outputs/flutter-apk/app-user-release.apk
+          name: apk-builds
+          path: |
+            build/app/outputs/flutter-apk/app-user-release.apk
+            build/app/outputs/flutter-apk/app-admin-release.apk
 
-      - name: Upload APK (admin)
-        uses: actions/upload-artifact@v4
+  release:
+    needs: [create-tag, build]
+    runs-on: ubuntu-latest
+    permissions: write-all
+    if: github.event_name == 'push'
+    steps:
+      - name: Download APK artifacts
+        uses: actions/download-artifact@v4
         with:
-          name: app-admin-release
-          path: build/app/outputs/flutter-apk/app-admin-release.apk
+          name: apk-builds
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release create ${{ needs.create-tag.outputs.version }} \
+            --title "Release ${{ needs.create-tag.outputs.version }}" \
+            --notes "Auto-release from CI" \
+            app-user-release.apk \
+            app-admin-release.apk
