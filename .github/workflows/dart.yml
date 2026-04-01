@@ -82,9 +82,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
         run: |
+          gh release delete ${{ needs.create-tag.outputs.version }} --yes 2>/dev/null || true
           gh release create ${{ needs.create-tag.outputs.version }} \
             --title "Release ${{ needs.create-tag.outputs.version }}" \
             --notes "Auto-release from CI" \
-            --clobber \
             app-user-release.apk \
             app-admin-release.apk
